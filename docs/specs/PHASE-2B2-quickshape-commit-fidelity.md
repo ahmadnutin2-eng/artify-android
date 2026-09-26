@@ -136,6 +136,27 @@ variance) and AC7 (symmetry snap) need the on-device matrix. Collaboration: the 
 `finishStroke` patch covers `strokeDirty`, which now includes the restored freehand area, so the
 partner receives the reverted pixels plus the shape.
 
+
+**Device results (2026-09-26, Samsung Galaxy Tab S9 Ultra SM-X910, sidecar `artify.com.codexqa`,
+integration branch `integration/device-test` = 1A + 2B1 + 2B2):**
+
+- Instrumented suite: 31 tests, 30 pass. All new tests pass (`SymmetryStrokeInstrumentedTest` 12/12,
+  `QuickShapeCommitInstrumentedTest` 3/3, `ProjectSaveSnapshotInstrumentedTest` 2/2,
+  `ProjectDocumentCodecInstrumentedTest` 2/2). The one failure,
+  `LayerCompositorInstrumentedTest.expandingMidStrokePreservesUndoBeforeImage`, is pre-existing:
+  it calls `.single()` on the layers of an open canvas, which has a background plus a paint layer;
+  neither the test nor `initialize()` is touched by these branches. Left for a separate fix.
+- Manual: vertical symmetry curve drawn with injected motion events → exact mirror, nothing across
+  the axis. Wobbly line + hold → QuickShape "straight line", no freehand residue, mirrored branch
+  present; one undo removed the whole gesture (both branches).
+- Manual: an old-layout project (root `project.json` + `layers/`) opened, edited and left →
+  `HEAD` = 1, `generations/0` (copy of the old save) + `generations/1`, root `layers/` gone, root
+  `project.json` pointing into `generations/1/`. After `am force-stop` and reopen, the new stroke and
+  all old content load. No entries in the crash buffer throughout.
+- Observation (pre-existing, not a regression): on an open canvas that grows to the left, the paper
+  centre moves, so the symmetry axis for the *next* stroke moves with it. The axis is stable within
+  a stroke as specified.
+
 ## Review outcome / Sign-off
 
 To be completed per `docs/specs/README.md`. Product-owner decision: whether a snapped shape should
