@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Merged into debug builds only. INTERNET is needed for the AI bug-reporter's calls to
+     NVIDIA's API - since that whole feature is compiled out of behavior (not just hidden) in
+     release builds, there's no reason for the Play Store build to request this permission at
+     all, so it's declared here rather than in the main manifest. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Local ws:// is useful only for the bundled development relay. Play/release builds keep
+         Android's cleartext block and require wss://. -->
+    <application
+        android:usesCleartextTraffic="true"
+        tools:replace="android:usesCleartextTraffic" />
+</manifest>

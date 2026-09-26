@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ================= Layers panel ================= -->
+    <string name="layers_count">Layers: %1$d</string>
+    <string name="layer_add">Add layer</string>
+    <string name="layer_delete">Delete layer</string>
+    <string name="layer_delete_last">The last layer cannot be deleted</string>
+    <string name="layer_merge_down_none">Nothing below to merge into</string>
+    <string name="layer_blend">Blend mode</string>
+    <string name="layer_alpha_lock">Alpha lock</string>
+    <string name="layer_alpha_lock_sub">Paint only over pixels that already exist</string>
+    <string name="layer_clipping">Clipping mask</string>
+    <string name="layer_clipping_sub">Show this layer only inside the layer below it</string>
+    <string name="layer_lock">Lock layer</string>
+    <string name="layer_lock_sub">Prevent any change to this layer</string>
+    <string name="layer_use_as_mask">Add / edit layer mask</string>
+    <string name="layer_use_as_mask_sub">Paint black to reveal layers below; paint white to restore this layer</string>
+    <string name="layer_mask_added">Layer mask added. You are now painting on the mask.</string>
+    <string name="layer_mask_editing">Now editing the mask: black hides, white reveals</string>
+    <string name="layer_pixels_editing">Now editing the layer pixels</string>
+    <string name="layer_mask_remove">Remove layer mask</string>
+    <string name="layer_mask_cleared">Mask restored to white</string>
+    <string name="layer_mask_badge">MASK</string>
+    <string name="layer_editing_mask_format">%1$s — Mask</string>
+    <string name="layer_clipped_to">Clipped to: %1$s</string>
+    <string name="layer_clip_no_base">Nothing below to clip to - this layer is hidden</string>
+    <string name="layer_mask_done_above">The layer above now shows only inside this drawing</string>
+    <string name="layer_mask_done_pulled">The layer below was moved above and clipped to this drawing</string>
+    <string name="layer_mask_none">There is no neighbouring layer to mask</string>
+    <string name="layer_mask_self_clipped">Turn off Clipping mask on this layer first</string>
+    <string name="layer_subtitle_format">%1$s · %2$d%%</string>
+    <string name="layer_opacity_format">%1$s: %2$d%%</string>
+    <string name="layer_drag_hint">Hold a layer, then drag to reorder</string>
+
+    <string name="blend_normal">Normal</string>
+    <string name="blend_multiply">Multiply</string>
+    <string name="blend_screen">Screen</string>
+    <string name="blend_overlay">Overlay</string>
+    <string name="blend_darken">Darken</string>
+    <string name="blend_lighten">Lighten</string>
+    <string name="blend_color_dodge">Color dodge</string>
+    <string name="blend_color_burn">Color burn</string>
+    <string name="blend_hard_light">Hard light</string>
+    <string name="blend_soft_light">Soft light</string>
+    <string name="blend_difference">Difference</string>
+    <string name="blend_exclusion">Exclusion</string>
+    <string name="blend_hue">Hue</string>
+    <string name="blend_saturation">Saturation</string>
+    <string name="blend_color">Color</string>
+    <string name="blend_luminosity">Luminosity</string>
+    <string name="blend_add">Add</string>
+    <string name="blend_subtract">Subtract</string>
+
+    <!-- ================= Canvas ================= -->
+    <string name="display_smooth_title">Smooth display when zoomed</string>
+    <string name="display_smooth_sub">Turn off to see the real pixels - suited to pixel art</string>
+    <string name="canvas_growth_blocked">The canvas reached its memory limit. Merge layers to free space and keep expanding.</string>
+    <string name="layer_base_color">Base colour</string>
+    <string name="layer_base_color_sub">White by default; tap to choose any colour without changing artwork</string>
+</resources>

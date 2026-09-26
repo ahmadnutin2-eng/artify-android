@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        A declared id for View.setTag(key, value). Tagging with a plain Int key throws
+        IllegalArgumentException at runtime ("The key must be an application-specific resource id"),
+        which is the kind of crash that only appears the first time someone taps the control.
+    -->
+    <item name="tag_row_selected" type="id" />
+</resources>

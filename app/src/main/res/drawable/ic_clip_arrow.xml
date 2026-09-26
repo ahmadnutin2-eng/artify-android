@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Corner arrow: "this layer hangs off the one above it in the list", the same mark Procreate
+         puts beside a clipped layer. -->
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M6,4 L6,13 Q6,16 9,16 L18,16 M14.5,12.5 L18,16 L14.5,19.5" />
+</vector>

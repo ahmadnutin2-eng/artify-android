@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Permissions -->
+    <!-- Required by the debug-only AI bug reporter, which posts crash/issue reports to a hosted
+         model endpoint. Without it every such call failed silently with a SecurityException that
+         the reporter's catch-all swallowed, surfacing as a misleading "check your connection". -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!--
+        The three media/storage permissions that used to be declared here are intentionally gone,
+        and removing them changed no behaviour at all.
+
+        Every image this app reads comes through ActivityResultContracts.GetContent() (the system
+        document picker) and every image it writes goes through MediaStore as the app's own entry -
+        neither needs a permission. There was also no runtime request anywhere in the codebase for
+        any of the three, so they were never actually granted; the app has always run without them.
+
+        Leaving them declared was not merely useless, it was actively harmful before publishing:
+        READ_MEDIA_IMAGES triggers Google Play's Photo and Video Permissions policy, which demands
+        a declaration form and is refused when the system photo picker or SAF would do the job -
+        which is exactly what this app already uses.
+
+        If a future feature ever genuinely needs broad media access, re-add the permission together
+        with the runtime request, and expect to complete Play's declaration form for it:
+            READ_EXTERNAL_STORAGE  (maxSdkVersion 32)
+            WRITE_EXTERNAL_STORAGE (maxSdkVersion 29)
+            READ_MEDIA_IMAGES
+    -->
+
+    <!-- Hardware features -->
+    <uses-feature android:name="android.hardware.touchscreen" android:required="true"/>
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false"/>
+
+    <application
+        android:name=".ArtifyApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="${appLabel}"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Artify"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true">
+
+        <!-- Gallery (Main Screen) -->
+        <activity
+            android:name=".ui.gallery.GalleryActivity"
+            android:exported="true"
+            android:screenOrientation="sensorLandscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Drawing Canvas Screen - only ever launched internally (from GalleryActivity via an
+             explicit intent, which works regardless of this flag), never through an intent
+             filter, so it has no reason to be reachable by other apps. -->
+        <activity
+            android:name=".ui.canvas.CanvasActivity"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

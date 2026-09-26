@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Top layer card -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M3,5h18v3H3z"/>
+    <!-- Down merge arrow -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,9h2v4h3l-4,4 -4,-4h3z"/>
+    <!-- Bottom layer card -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M3,18h18v3H3z"/>
+</vector>

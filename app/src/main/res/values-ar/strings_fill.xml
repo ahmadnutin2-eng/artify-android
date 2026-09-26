@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fill_title">دلو التعبئة</string>
+    <string name="fill_tolerance">حساسية اللون</string>
+    <string name="fill_tolerance_sub">مقدار اختلاف اللون المسموح به ليُعتبر من المنطقة نفسها</string>
+    <string name="fill_gap">إغلاق الفجوات</string>
+    <string name="fill_gap_sub">يمنع تسرّب التعبئة بين خصلات الشعر أو الفرو. الأعلى يغلق فجوات أوسع، والمبالغة تُدوّر الزوايا الحادة.</string>
+    <string name="fill_expand">تغطية حافة الخط</string>
+    <string name="fill_expand_sub">يُدخل التعبئة تحت حواف الخط الناعمة فلا يبقى إطار باهت</string>
+    <string name="fill_contiguous">المنطقة المتصلة فقط</string>
+    <string name="fill_contiguous_sub">عند الإيقاف تُملأ كل المناطق المتطابقة في الطبقة</string>
+    <string name="fill_px_format">%1$d بكسل</string>
+    <string name="fill_nothing">لا يوجد ما يُملأ هنا</string>
+</resources>

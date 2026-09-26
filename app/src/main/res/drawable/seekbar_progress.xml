@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The fill always grows from the left, and PanelUi pins every slider's layout direction to match.
+
+    SeekBar mirrors its thumb under a right-to-left locale but draws this drawable unmirrored, so
+    the two disagreed: at any value between the extremes the blue ran from one end while the thumb
+    sat at the other, and the control contradicted itself. Neither "start" gravity nor a
+    drawable-ldrtl twin fixes that - both change where the fill begins without changing the half
+    that was already wrong. Fixing the direction of the widget instead leaves one behaviour in
+    every locale.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background" android:gravity="center_vertical|fill_horizontal">
+        <shape android:shape="rectangle">
+            <corners android:radius="3dp"/>
+            <solid android:color="@color/surface_3"/>
+            <size android:height="6dp"/>
+        </shape>
+    </item>
+    <item android:id="@android:id/progress" android:gravity="center_vertical|fill_horizontal">
+        <clip android:clipOrientation="horizontal" android:gravity="left">
+            <shape android:shape="rectangle">
+                <corners android:radius="3dp"/>
+                <solid android:color="@color/procreate_accent"/>
+                <size android:height="6dp"/>
+            </shape>
+        </clip>
+    </item>
+</layer-list>

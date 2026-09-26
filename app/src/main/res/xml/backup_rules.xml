@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup rules for Android 11 and below (fullBackupContent).
+
+    The app's artwork and ordinary preferences are worth restoring onto a new device, so the default
+    "back everything up" behaviour is kept. The one exception is the user's own AI API key: a
+    credential they pasted in should not be copied to their Google Drive, and the settings screen
+    promises exactly that. AiKeyStore keeps it in its own preferences file so this exclusion can be
+    precise - backup exclusions work per file, not per key.
+-->
+<full-backup-content>
+    <exclude domain="sharedpref" path="artify_ai_keys.xml" />
+</full-backup-content>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base surfaces (layered elevation, darkest to lightest) -->
+    <color name="background_dark">#111113</color>
+    <color name="background_darker">#0B0B0D</color>
+    <color name="surface_1">#1B1B1E</color>
+    <color name="surface_2">#242427</color>
+    <color name="surface_3">#2D2D31</color>
+    <color name="surface_4">#38383D</color>
+
+    <color name="panel_background">#F01C1C1F</color>
+    <color name="panel_background_solid">#1C1C1F</color>
+
+    <!-- Brush library glass system: the canvas remains legible behind the palette while the
+         stronger preview wells preserve the true silhouette and grain of pale brush swatches. -->
+    <color name="brush_glass">#DD101116</color>
+    <color name="brush_rail_glass">#7806070A</color>
+    <color name="brush_preview_surface">#78030508</color>
+    <color name="brush_row_hover">#16FFFFFF</color>
+    <color name="brush_selected_start">#EB397EF6</color>
+    <color name="brush_selected_end">#C4245FC4</color>
+
+    <!-- Brand -->
+    <color name="procreate_accent">#397EF6</color>
+    <color name="procreate_accent_dark">#245FC4</color>
+    <color name="procreate_accent_light">#8DB7FF</color>
+    <color name="accent_soft">#33397EF6</color>
+    <color name="accent_softer">#1A397EF6</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B3FFFFFF</color>
+    <color name="text_hint">#73FFFFFF</color>
+    <color name="text_disabled">#40FFFFFF</color>
+
+    <!-- Icons -->
+    <color name="icon_color">#D8D8DC</color>
+    <color name="icon_selected">#FFFFFF</color>
+    <color name="icon_dim">#8A8A90</color>
+
+    <!-- Structure -->
+    <color name="divider_color">#26FFFFFF</color>
+    <color name="hairline_color">#14FFFFFF</color>
+    <color name="ripple_light">#26FFFFFF</color>
+    <color name="ripple_accent">#4D397EF6</color>
+    <color name="outline_subtle">#1FFFFFFF</color>
+
+    <color name="danger">#E15554</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+</resources>

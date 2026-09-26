@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!--
+        Three overlapping circles - the long-standing convention for colour filters, readable at
+        24dp and instantly distinguishable from the blur tool's single soft disc. Outlines rather
+        than fills so it stays legible against both toolbar states under a tint selector.
+    -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.28"
+        android:pathData="M9,8.5m-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0" />
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.28"
+        android:pathData="M15,8.5m-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0" />
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.28"
+        android:pathData="M12,15m-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0" />
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M9,8.5m-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0" />
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M15,8.5m-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0" />
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,15m-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0" />
+</vector>

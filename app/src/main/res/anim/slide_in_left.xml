@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Enter animation for a panel docked to the LEFT edge of the screen. The existing slide_in_end
+    travels from +100% (the right), which is right for an end-docked panel in an LTR layout and
+    backwards for one that must sit on the left.
+-->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:duration="260"
+        android:fromXDelta="-100%"
+        android:toXDelta="0%"
+        android:interpolator="@android:interpolator/decelerate_cubic" />
+</set>

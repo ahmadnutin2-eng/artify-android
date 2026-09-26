@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The chosen capsule: same shape as its neighbours, filled with the accent. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/ripple_accent">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#E60A73E8" />
+            <corners android:radius="22dp" />
+        </shape>
+    </item>
+</ripple>

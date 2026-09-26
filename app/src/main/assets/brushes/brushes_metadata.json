@@ -1,0 +1,1304 @@
+[
+    {
+        "RawName":  "2B-Compressed",
+        "Shape":  "tx-charcoal-soft.jpg",
+        "Grain":  "tx-charcoal-vine.jpg",
+        "Thumbnail":  "th-charcoal-soft.png"
+    },
+    {
+        "RawName":  "4B-Compressed",
+        "Shape":  "tx-charcoal-macro.jpg",
+        "Grain":  "tx-charcoal-corse.jpg",
+        "Thumbnail":  "th-charcoal-macro.png"
+    },
+    {
+        "RawName":  "6B-Compressed",
+        "Shape":  "tx-charcoal-soft.jpg",
+        "Grain":  "tx-charcoal-6b.jpg",
+        "Thumbnail":  "th-charcoal-soft.png"
+    },
+    {
+        "RawName":  "6B-Pencil",
+        "Shape":  "tx-brick.png",
+        "Grain":  "tx-charcoal-corse.jpg",
+        "Thumbnail":  "th-brick.png"
+    },
+    {
+        "RawName":  "Acrylic",
+        "Shape":  "tx-refined-round-dots.png",
+        "Grain":  "tx-badspray.jpg",
+        "Thumbnail":  "th-acrylic-dab-2.jpg"
+    },
+    {
+        "RawName":  "Artist-Crayon",
+        "Shape":  "tx-crayon.jpg",
+        "Grain":  "tx-paper-mush.jpg",
+        "Thumbnail":  "th-crayon.png"
+    },
+    {
+        "RawName":  "Polar-Glow",
+        "Shape":  "tx-simple-blotch.jpg",
+        "Grain":  "tx-raw-canvas.jpg",
+        "Thumbnail":  "th-simple-blotch.jpg"
+    },
+    {
+        "RawName":  "Soft-Wash",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Bamboo",
+        "Shape":  "tx-synthetic-round.jpg",
+        "Grain":  "tx-bark.jpg",
+        "Thumbnail":  "th-synthetic-round.png"
+    },
+    {
+        "RawName":  "Ink-Nib",
+        "Shape":  "tx-simple-leaf.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-simple-leaf.jpg"
+    },
+    {
+        "RawName":  "Deep-Ink",
+        "Shape":  "tx-ink-dry.png",
+        "Grain":  "tx-paper-mush.jpg",
+        "Thumbnail":  "th-ink-dry.png"
+    },
+    {
+        "RawName":  "Dark-Timber",
+        "Shape":  "tx-acrylic-dab.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-acrylic-dab-2.jpg"
+    },
+    {
+        "RawName":  "Blotch",
+        "Shape":  "tx-splash-2.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-blotch.png"
+    },
+    {
+        "RawName":  "Blotchy",
+        "Shape":  "tx-intense-water.jpg",
+        "Grain":  "tx-stained-paper-2.jpg",
+        "Thumbnail":  "th-intense-water.png"
+    },
+    {
+        "RawName":  "Bokeh-Lights",
+        "Shape":  "tx-bokeh.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-bokeh.png"
+    },
+    {
+        "RawName":  "Bolt",
+        "Shape":  "tx-lightning.jpg",
+        "Grain":  "tx-oil-canvas.jpg",
+        "Thumbnail":  "th-lightning.png"
+    },
+    {
+        "RawName":  "Chalk-Stick",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-chalk-stick.png",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Brush-Pen",
+        "Shape":  "tx-oval.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-oval.png"
+    },
+    {
+        "RawName":  "Charred-Branch",
+        "Shape":  "tx-charcoal-shards.jpg",
+        "Grain":  "tx-charcoal-burnt.jpg",
+        "Thumbnail":  "th-charcoal-shards.png"
+    },
+    {
+        "RawName":  "Burst",
+        "Shape":  "tx-burst.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-burst.png"
+    },
+    {
+        "RawName":  "Buzz-Line",
+        "Shape":  "tx-lattice.jpg",
+        "Grain":  "tx-badspray.jpg",
+        "Thumbnail":  "th-lattice.png"
+    },
+    {
+        "RawName":  "Cage-Grid",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-cage.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Rough-Wash",
+        "Shape":  "tx-acrylic-stamp.png",
+        "Grain":  "tx-dof-dots.jpg",
+        "Thumbnail":  "th-acrylic-stamp-2.jpg"
+    },
+    {
+        "RawName":  "Carbon-Stick",
+        "Shape":  "tx-charcoal-whisp.jpg",
+        "Grain":  "tx-graphite.jpg",
+        "Thumbnail":  "th-charcoal-whisp.png"
+    },
+    {
+        "RawName":  "Chalk",
+        "Shape":  "tx-paint-dab-1.jpg",
+        "Grain":  "tx-charcoal-6b.jpg",
+        "Thumbnail":  "th-paint-dab-1.png"
+    },
+    {
+        "RawName":  "Charcoal-Block",
+        "Shape":  "tx-charcoal-block.jpg",
+        "Grain":  "tx-charcoal-rough.jpg",
+        "Thumbnail":  "th-charcoal-block.png"
+    },
+    {
+        "RawName":  "Clay",
+        "Shape":  "tx-water-blotch-1.jpg",
+        "Grain":  "tx-wet-paper.jpg",
+        "Thumbnail":  "th-clay.png"
+    },
+    {
+        "RawName":  "Clouds",
+        "Shape":  "tx-cloud-shape.jpg",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-clouds.png"
+    },
+    {
+        "RawName":  "Concrete-Block",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-concreate.jpg",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Copper-Line",
+        "Shape":  "tx-weary-dots.jpg",
+        "Grain":  "tx-pastel-board.jpg",
+        "Thumbnail":  "th-weary-dots.jpg"
+    },
+    {
+        "RawName":  "Corrugated-Iron",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-corrugated.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Cotton",
+        "Shape":  "tx-crusty.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-cotton-paper.jpg"
+    },
+    {
+        "RawName":  "Crystals",
+        "Shape":  "tx-crystal-shape.jpg",
+        "Grain":  "tx-aggate.jpg",
+        "Thumbnail":  "th-crystal-shape.png"
+    },
+    {
+        "RawName":  "Cubes",
+        "Shape":  "tx-hexagon.png",
+        "Grain":  "tx-cubes.png",
+        "Thumbnail":  "th-cubes.png"
+    },
+    {
+        "RawName":  "Feather-Ink",
+        "Shape":  "tx-gouache-drop.jpg",
+        "Grain":  "tx-acrylic-grit.jpg",
+        "Thumbnail":  "th-gouache-drop-2.jpg"
+    },
+    {
+        "RawName":  "Fine-Feather",
+        "Shape":  "tx-acrylic-impress.png",
+        "Grain":  "tx-crunchy-paper.jpg",
+        "Thumbnail":  "th-acrylic-impress.jpg"
+    },
+    {
+        "RawName":  "Coastal-Wash",
+        "Shape":  "tx-acrylic-dab.jpg",
+        "Grain":  "tx-procedural-noise.jpg",
+        "Thumbnail":  "th-acrylic-dab-2.jpg"
+    },
+    {
+        "RawName":  "Damp-Brush",
+        "Shape":  "tx-ink-sponge.png",
+        "Grain":  "tx-brick.jpg",
+        "Thumbnail":  "th-ink-sponge.png"
+    },
+    {
+        "RawName":  "Dot-Matrix",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-hard.png",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "River-Wash",
+        "Shape":  "tx-distressed-stamp.jpg",
+        "Grain":  "tx-european-paper.jpg",
+        "Thumbnail":  "th-distressed-stamp.jpg"
+    },
+    {
+        "RawName":  "Diagonal",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-diagonal.png",
+        "Thumbnail":  "th-diagonal.png"
+    },
+    {
+        "RawName":  "Mirror-Ball",
+        "Shape":  "tx-disco-ball.png",
+        "Grain":  "tx-badspray.jpg",
+        "Thumbnail":  "th-disco-ball.png"
+    },
+    {
+        "RawName":  "Still-Water",
+        "Shape":  "tx-gouache-drop-2.jpg",
+        "Grain":  "tx-kingston-beach.jpg",
+        "Thumbnail":  "th-gouache-drop-2.jpg"
+    },
+    {
+        "RawName":  "Drip",
+        "Shape":  "tx-drip.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-drip.png"
+    },
+    {
+        "RawName":  "Snow-Drift",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-flakes.png",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Dry-Brush",
+        "Shape":  "tx-charcoal-block.jpg",
+        "Grain":  "tx-bark.png",
+        "Thumbnail":  "th-charcoal-block.png"
+    },
+    {
+        "RawName":  "Dry-Ink",
+        "Shape":  "tx-blotch.jpg",
+        "Grain":  "tx-splatters.png",
+        "Thumbnail":  "th-blotch.png"
+    },
+    {
+        "RawName":  "Talon-Ink",
+        "Shape":  "tx-acrylic-stamp-2.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-acrylic-stamp-2.jpg"
+    },
+    {
+        "RawName":  "Morph",
+        "Shape":  "tx-acrylic-dab.jpg",
+        "Grain":  "tx-light-pastel-board.jpg",
+        "Thumbnail":  "th-acrylic-dab-2.jpg"
+    },
+    {
+        "RawName":  "Fat-Nozzle",
+        "Shape":  "tx-fat.jpg",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-fat.png"
+    },
+    {
+        "RawName":  "Fern-Texture",
+        "Shape":  "tx-acrylic-square.jpg",
+        "Grain":  "tx-bark.png",
+        "Thumbnail":  "th-acrylic-square.jpg"
+    },
+    {
+        "RawName":  "Heat-Haze",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-70s-fever.jpg",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Fine-Hair",
+        "Shape":  "tx-ink2.jpg",
+        "Grain":  "tx-fine-hair.jpg",
+        "Thumbnail":  "th-fine-hair.png"
+    },
+    {
+        "RawName":  "Fine-Nozzle",
+        "Shape":  "tx-burst.jpg",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-burst.png"
+    },
+    {
+        "RawName":  "Fine-Tip",
+        "Shape":  "tx-ultra-soft-2.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-ultra-soft-2.png"
+    },
+    {
+        "RawName":  "Flames",
+        "Shape":  "tx-tendril.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-tendril.png"
+    },
+    {
+        "RawName":  "Flare",
+        "Shape":  "tx-flare.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-flare.png"
+    },
+    {
+        "RawName":  "Flat-Brush",
+        "Shape":  "tx-brick.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-flat-brush.png"
+    },
+    {
+        "RawName":  "Flicks",
+        "Shape":  "tx-flicks.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-flicks.png"
+    },
+    {
+        "RawName":  "Flourish",
+        "Shape":  "tx-sable-shape.png",
+        "Grain":  "tx-sable-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Bloom",
+        "Shape":  "tx-flower.jpg",
+        "Grain":  "tx-badspray.jpg",
+        "Thumbnail":  "th-flower.png"
+    },
+    {
+        "RawName":  "Flowing-Hair",
+        "Shape":  "tx-flowing.jpg",
+        "Grain":  "tx-bark.png",
+        "Thumbnail":  "th-flowing.png"
+    },
+    {
+        "RawName":  "Fresco",
+        "Shape":  "tx-water-bleed.png",
+        "Grain":  "tx-grunge.jpg",
+        "Thumbnail":  "th-water-bleed-2.png"
+    },
+    {
+        "RawName":  "Granite-Wash",
+        "Shape":  "tx-gouache-splash.jpg",
+        "Grain":  "tx-pastel-board-fine.jpg",
+        "Thumbnail":  "th-gouache-splash.jpg"
+    },
+    {
+        "RawName":  "Island-Grain",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-leopard-print.png",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Star-Field",
+        "Shape":  "tx-acrylic-stamp.png",
+        "Grain":  "tx-memories.png",
+        "Thumbnail":  "th-acrylic-stamp-2.jpg"
+    },
+    {
+        "RawName":  "Gel-Pen",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Studio-Ink",
+        "Shape":  "tx-slim-oval.png",
+        "Grain":  "tx-textured-ink.png",
+        "Thumbnail":  "th-slim-oval.png"
+    },
+    {
+        "RawName":  "Shimmer",
+        "Shape":  "tx-star.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-star.png"
+    },
+    {
+        "RawName":  "Dusk-Glow",
+        "Shape":  "tx-acrylic-stamp-3.png",
+        "Grain":  "tx-cotton-paper.jpg",
+        "Thumbnail":  "th-acrylic-stamp-3.jpg"
+    },
+    {
+        "RawName":  "Landscape-Wash",
+        "Shape":  "tx-acrylic-dab.jpg",
+        "Grain":  "tx-stone-wall-2.png",
+        "Thumbnail":  "th-acrylic-dab-2.jpg"
+    },
+    {
+        "RawName":  "Gouache",
+        "Shape":  "tx-mess.jpg",
+        "Grain":  "tx-grain.png",
+        "Thumbnail":  "th-gouache-drop-2.jpg"
+    },
+    {
+        "RawName":  "Grid",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-grid.png",
+        "Thumbnail":  "th-grid.png"
+    },
+    {
+        "RawName":  "Retro-Wave",
+        "Shape":  "tx-gloop.jpg",
+        "Grain":  "tx-sprial.jpg",
+        "Thumbnail":  "th-gloop.png"
+    },
+    {
+        "RawName":  "Grunge",
+        "Shape":  "tx-flat-brush2.jpg",
+        "Grain":  "tx-grunge.jpg",
+        "Thumbnail":  "th-grunge.png"
+    },
+    {
+        "RawName":  "Hard-Airbrush",
+        "Shape":  "tx-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-hard.png"
+    },
+    {
+        "RawName":  "Hard-Blend",
+        "Shape":  "tx-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-hard.png"
+    },
+    {
+        "RawName":  "Hard-Brush",
+        "Shape":  "tx-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-hard.png"
+    },
+    {
+        "RawName":  "Hard-Rain",
+        "Shape":  "tx-directional-rain.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-directional-rain.png"
+    },
+    {
+        "RawName":  "Alpine-Grain",
+        "Shape":  "tx-oil-dash.png",
+        "Grain":  "tx-wax-crayon-paper.jpg",
+        "Thumbnail":  "th-oil-dash-2.jpg"
+    },
+    {
+        "RawName":  "HB-Pencil",
+        "Shape":  "tx-scribble.jpg",
+        "Grain":  "tx-munched-paper.png",
+        "Thumbnail":  "th-scribble.png"
+    },
+    {
+        "RawName":  "Steel-Edge",
+        "Shape":  "tx-rust-2.jpg",
+        "Grain":  "tx-rust-1.jpg",
+        "Thumbnail":  "th-rust-2.png"
+    },
+    {
+        "RawName":  "Hemp",
+        "Shape":  "tx-mess.png",
+        "Grain":  "tx-canvas-1.jpg",
+        "Thumbnail":  "th-mess.png"
+    },
+    {
+        "RawName":  "Hessian",
+        "Shape":  "tx-hessian.png",
+        "Grain":  null,
+        "Thumbnail":  "th-hessian.png"
+    },
+    {
+        "RawName":  "Hex-Grid",
+        "Shape":  "tx-hex.png",
+        "Grain":  "tx-hexagon.png",
+        "Thumbnail":  "th-hex.png"
+    },
+    {
+        "RawName":  "Nectar-Dot",
+        "Shape":  "tx-acrylic-stamp-4.png",
+        "Grain":  null,
+        "Thumbnail":  "th-acrylic-stamp-4.jpg"
+    },
+    {
+        "RawName":  "Ink-Bleed",
+        "Shape":  "tx-ink2.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-ink2.png"
+    },
+    {
+        "RawName":  "Ink-Drop",
+        "Shape":  "tx-acrylic-stamp-5.png",
+        "Grain":  "tx-gouache-wash.jpg",
+        "Thumbnail":  "th-acrylic-stamp-5.jpg"
+    },
+    {
+        "RawName":  "Jagged-Brush",
+        "Shape":  "tx-flat-brush.jpg",
+        "Grain":  "tx-army.jpg",
+        "Thumbnail":  "th-flat-brush.png"
+    },
+    {
+        "RawName":  "Summit-Grain",
+        "Shape":  "tx-acrylic-dab-rough.jpg",
+        "Grain":  "tx-pastel-board-coarse.jpg",
+        "Thumbnail":  "th-acrylic-dab-rough-2.jpg"
+    },
+    {
+        "RawName":  "Shoreline",
+        "Shape":  "tx-acrylic-dab-2.png",
+        "Grain":  "tx-distressed-canvas.jpg",
+        "Thumbnail":  "th-acrylic-dab-2.jpg"
+    },
+    {
+        "RawName":  "Leather-Grain",
+        "Shape":  "tx-haggard-oval.png",
+        "Grain":  "tx-raw-canvas.jpg",
+        "Thumbnail":  "th-haggard-oval.jpg"
+    },
+    {
+        "RawName":  "Lightbrush",
+        "Shape":  "tx-brush-glow.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-brush-glow.png"
+    },
+    {
+        "RawName":  "Lightleak",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-lightpeaks.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Lightpen",
+        "Shape":  "tx-pen-glow.jpg",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-pen-glow.png"
+    },
+    {
+        "RawName":  "Limestone",
+        "Shape":  "tx-limestone-shape.png",
+        "Grain":  "tx-limestone-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Pine-Needle",
+        "Shape":  "tx-acrylic-stamp-2.jpg",
+        "Grain":  "tx-pastel-board-coarse.jpg",
+        "Thumbnail":  "th-acrylic-stamp-2.jpg"
+    },
+    {
+        "RawName":  "Wild-Splash",
+        "Shape":  "tx-splash-1.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-splash-1.png"
+    },
+    {
+        "RawName":  "Marble",
+        "Shape":  "tx-scribble-2.jpg",
+        "Grain":  "tx-bark.png",
+        "Thumbnail":  "th-scribble-2.png"
+    },
+    {
+        "RawName":  "Marker",
+        "Shape":  "tx-ink.jpg",
+        "Grain":  "tx-munched-paper.png",
+        "Thumbnail":  "th-ink.png"
+    },
+    {
+        "RawName":  "Medium-Airbrush",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Medium-Blend",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Medium-Brush",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Medium-Hard-Airbrush",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Medium-Hard-Blend",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Medium-Hard-Brush",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Medium-Nozzle",
+        "Shape":  "tx-fine-spray.jpg",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-fine-spray.png"
+    },
+    {
+        "RawName":  "Paperbark",
+        "Shape":  "tx-acrylic-dab-rough-2.jpg",
+        "Grain":  "tx-warby-canvas.jpg",
+        "Thumbnail":  "th-acrylic-dab-rough-2.jpg"
+    },
+    {
+        "RawName":  "Cell-Wall",
+        "Shape":  "tx-synthetic-round.jpg",
+        "Grain":  "tx-membrane.jpg",
+        "Thumbnail":  "th-membrane.png"
+    },
+    {
+        "RawName":  "Liquid-Metal",
+        "Shape":  "tx-acrylic-stamp.png",
+        "Grain":  "tx-gouache-wash.jpg",
+        "Thumbnail":  "th-acrylic-stamp-2.jpg"
+    },
+    {
+        "RawName":  "Metallic-Sand",
+        "Shape":  "tx-acrylic-dab-3.jpg",
+        "Grain":  "tx-wax-crayon-paper.jpg",
+        "Thumbnail":  "th-acrylic-dab-3.jpg"
+    },
+    {
+        "RawName":  "Metallic-Cascade",
+        "Shape":  "tx-oil-dash-3.png",
+        "Grain":  "tx-gouache-wash.jpg",
+        "Thumbnail":  "th-oil-dash-3.jpg"
+    },
+    {
+        "RawName":  "Monoline",
+        "Shape":  "tx-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-hard.png"
+    },
+    {
+        "RawName":  "Vineyard-Wash",
+        "Shape":  "tx-acrylic-stamp-4.png",
+        "Grain":  "tx-raggedy-gouache.jpg",
+        "Thumbnail":  "th-acrylic-stamp-4.jpg"
+    },
+    {
+        "RawName":  "Tall-Timber",
+        "Shape":  "tx-acrylic-dab-rough.jpg",
+        "Grain":  "tx-cicero-tree.jpg",
+        "Thumbnail":  "th-acrylic-dab-rough-2.jpg"
+    },
+    {
+        "RawName":  "Leaf-Grain",
+        "Shape":  "tx-acrylic-stamp.png",
+        "Grain":  "tx-bacteria.png",
+        "Thumbnail":  "th-acrylic-stamp-2.jpg"
+    },
+    {
+        "RawName":  "Sketch-Pencil",
+        "Shape":  "tx-small-point.png",
+        "Grain":  "tx-recycled-paper.png",
+        "Thumbnail":  "th-recycled-paper.png"
+    },
+    {
+        "RawName":  "Star-Cloud",
+        "Shape":  "tx-neblua.jpg",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-neblua.png"
+    },
+    {
+        "RawName":  "Newsprint",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-worn-dots.jpg",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Roller-Ink",
+        "Shape":  "tx-brick.png",
+        "Grain":  "tx-grunge.jpg",
+        "Thumbnail":  "th-brick.png"
+    },
+    {
+        "RawName":  "Noise-Brush",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-noise.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Night-Wash",
+        "Shape":  "tx-acrylic-stamp-6.jpg",
+        "Grain":  "tx-fine-thread.jpg",
+        "Thumbnail":  "th-acrylic-stamp-6.jpg"
+    },
+    {
+        "RawName":  "Oceans",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-ocean.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Stage-Glow",
+        "Shape":  "tx-blank.png",
+        "Grain":  null,
+        "Thumbnail":  "th-blank.png"
+    },
+    {
+        "RawName":  "Oil-Paint",
+        "Shape":  "tx-ink-sponge.png",
+        "Grain":  "tx-rust-3.jpg",
+        "Thumbnail":  "th-ink-sponge.png"
+    },
+    {
+        "RawName":  "Oil-Pastel",
+        "Shape":  "tx-mess.jpg",
+        "Grain":  "tx-oil-pastel.jpg",
+        "Thumbnail":  "th-oil-pastel.png"
+    },
+    {
+        "RawName":  "Sand-Drift",
+        "Shape":  "tx-acrylic-dab-3.jpg",
+        "Grain":  "tx-wax-crayon-paper.jpg",
+        "Thumbnail":  "th-acrylic-dab-3.jpg"
+    },
+    {
+        "RawName":  "Old-Brush",
+        "Shape":  "tx-charcoal-block.jpg",
+        "Grain":  "tx-hard-ink.png",
+        "Thumbnail":  "th-charcoal-block.png"
+    },
+    {
+        "RawName":  "Aged-Skin",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-leather.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Optic-Flare",
+        "Shape":  "tx-reticles.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-reticles.png"
+    },
+    {
+        "RawName":  "East-Asian-Brush",
+        "Shape":  "tx-ink.jpg",
+        "Grain":  "tx-aggate.jpg",
+        "Thumbnail":  "th-ink.png"
+    },
+    {
+        "RawName":  "Palm-Husk",
+        "Shape":  "tx-palm-shape.png",
+        "Grain":  "tx-palm-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Frond",
+        "Shape":  "tx-acrylic-dab-4.jpg",
+        "Grain":  "tx-undercoat.jpg",
+        "Thumbnail":  "th-acrylic-dab-4.jpg"
+    },
+    {
+        "RawName":  "Petal-Dot",
+        "Shape":  "tx-garden-gum.png",
+        "Grain":  "tx-gouache-wash.jpg",
+        "Thumbnail":  "th-garden-gum.jpg"
+    },
+    {
+        "RawName":  "Mint-Leaf",
+        "Shape":  "tx-distressed-stamp.jpg",
+        "Grain":  "tx-procedural-noise.jpg",
+        "Thumbnail":  "th-distressed-stamp.jpg"
+    },
+    {
+        "RawName":  "Chalk-Line",
+        "Shape":  "tx-acrylic-dab.jpg",
+        "Grain":  "tx-raw-canvas.jpg",
+        "Thumbnail":  "th-acrylic-dab-2.jpg"
+    },
+    {
+        "RawName":  "Polygons",
+        "Shape":  "tx-cube.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-cube.png"
+    },
+    {
+        "RawName":  "Artify-Pencil",
+        "Shape":  "tx-ink.jpg",
+        "Grain":  "tx-dirty-paper.jpg",
+        "Thumbnail":  "th-ink.png"
+    },
+    {
+        "RawName":  "Pulse",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-blinds-glow.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Spotted-Grain",
+        "Shape":  "tx-oil-dab.png",
+        "Grain":  "tx-gouache-wash-2.jpg",
+        "Thumbnail":  "th-oil-dab.jpg"
+    },
+    {
+        "RawName":  "Radiant",
+        "Shape":  "tx-torn.jpg",
+        "Grain":  "tx-army.jpg",
+        "Thumbnail":  "th-torn.png"
+    },
+    {
+        "RawName":  "Canopy",
+        "Shape":  "tx-garden-bush.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-garden-bush.jpg"
+    },
+    {
+        "RawName":  "Rect-Grid",
+        "Shape":  "tx-gouache-streak.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-gouache-streak.jpg"
+    },
+    {
+        "RawName":  "Reed",
+        "Shape":  "tx-blotch-1.jpg",
+        "Grain":  "tx-charcoal-burnt.jpg",
+        "Thumbnail":  "th-reed.png"
+    },
+    {
+        "RawName":  "Silt-Wash",
+        "Shape":  "tx-marble-shape.png",
+        "Grain":  "tx-marble-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Rosette",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-dof-dots-light.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Rough-Skin",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-orange-peal.jpg",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Round-Brush",
+        "Shape":  "tx-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-hard.png"
+    },
+    {
+        "RawName":  "Rust",
+        "Shape":  "tx-mess.jpg",
+        "Grain":  "tx-rust-3.jpg",
+        "Thumbnail":  "th-mess-2.png"
+    },
+    {
+        "RawName":  "Sable",
+        "Shape":  "tx-water-blotch-2.jpg",
+        "Grain":  "tx-chalk-stick.png",
+        "Thumbnail":  "th-water-blotch-2.png"
+    },
+    {
+        "RawName":  "Cobblestone",
+        "Shape":  "tx-acrylic-dab-5.jpg",
+        "Grain":  "tx-raw-canvas.jpg",
+        "Thumbnail":  "th-acrylic-dab-5.jpg"
+    },
+    {
+        "RawName":  "Sandstone",
+        "Shape":  "tx-earth-shape.png",
+        "Grain":  "tx-earth-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Bark-Grain",
+        "Shape":  "tx-liquid-lines.png",
+        "Grain":  "tx-distressed-canvas-2.jpg",
+        "Thumbnail":  "th-liquid-lines.jpg"
+    },
+    {
+        "RawName":  "Sawtooth",
+        "Shape":  "tx-acrylic-dab-5.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-acrylic-dab-5.jpg"
+    },
+    {
+        "RawName":  "Script",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Shale-Brush",
+        "Shape":  "tx-paint-dab-1.jpg",
+        "Grain":  "tx-dirty-paper.jpg",
+        "Thumbnail":  "th-paint-dab-1.png"
+    },
+    {
+        "RawName":  "Short-Hair",
+        "Shape":  "tx-short-hair.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-short-hair.png"
+    },
+    {
+        "RawName":  "Signature",
+        "Shape":  "tx-medium.png",
+        "Grain":  "tx-textured-ink.png",
+        "Thumbnail":  "th-medium.png"
+    },
+    {
+        "RawName":  "Smoke",
+        "Shape":  "tx-tentacle.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-tentacle.png"
+    },
+    {
+        "RawName":  "Smoky-Quartz",
+        "Shape":  "tx-sediment-shape.png",
+        "Grain":  "tx-sediment-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Pale-Bark",
+        "Shape":  "tx-garden-leaf.png",
+        "Grain":  "tx-clay.jpg",
+        "Thumbnail":  "th-garden-leaf.jpg"
+    },
+    {
+        "RawName":  "Soft-Airbrush",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Soft-Blend",
+        "Shape":  "tx-ultra-soft-2.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-ultra-soft-2.png"
+    },
+    {
+        "RawName":  "Soft-Brush",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Soft-Pastel",
+        "Shape":  "tx-blotch.jpg",
+        "Grain":  "tx-pastel-paper.jpg",
+        "Thumbnail":  "th-blotch.png"
+    },
+    {
+        "RawName":  "Prism",
+        "Shape":  "tx-infrared-oil.jpg",
+        "Grain":  "tx-gouache-wash.jpg",
+        "Thumbnail":  "th-infrared-oil.jpg"
+    },
+    {
+        "RawName":  "Needle-Dot",
+        "Shape":  "tx-spike.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-spike.png"
+    },
+    {
+        "RawName":  "Ridge-Line",
+        "Shape":  "tx-garden-rocks.jpg",
+        "Grain":  "tx-cliff-face.jpg",
+        "Thumbnail":  "th-garden-rocks.jpg"
+    },
+    {
+        "RawName":  "Splatter",
+        "Shape":  "tx-splash-1.jpg",
+        "Grain":  "tx-aggate.jpg",
+        "Thumbnail":  "th-gouache-splatter-2.jpg"
+    },
+    {
+        "RawName":  "Figure",
+        "Shape":  "tx-solid-rectangles.png",
+        "Grain":  null,
+        "Thumbnail":  "th-solid-rectangles.jpg"
+    },
+    {
+        "RawName":  "Stone-Wall",
+        "Shape":  "tx-mess.jpg",
+        "Grain":  "tx-stone-wall.jpg",
+        "Thumbnail":  "th-stone-wall.png"
+    },
+    {
+        "RawName":  "Storm-Wash",
+        "Shape":  "tx-seashell.jpg",
+        "Grain":  "tx-kingston-beach-2.jpg",
+        "Thumbnail":  "th-seashell.jpg"
+    },
+    {
+        "RawName":  "Streaks",
+        "Shape":  "tx-streaky.jpg",
+        "Grain":  "tx-stained-paper-1.jpg",
+        "Thumbnail":  "th-streaky.png"
+    },
+    {
+        "RawName":  "Stubble",
+        "Shape":  "tx-stubble.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-stubble.png"
+    },
+    {
+        "RawName":  "Stucco",
+        "Shape":  "tx-square-dots.jpg",
+        "Grain":  "tx-brick.jpg",
+        "Thumbnail":  "th-square-dots.png"
+    },
+    {
+        "RawName":  "Precision-Pen",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Deep-Current",
+        "Shape":  "tx-orbs.png",
+        "Grain":  "tx-square-dots.jpg",
+        "Thumbnail":  "th-orbs.png"
+    },
+    {
+        "RawName":  "Blade-Grass",
+        "Shape":  "tx-garden-grass.png",
+        "Grain":  "tx-oil-board.jpg",
+        "Thumbnail":  "th-garden-grass.jpg"
+    },
+    {
+        "RawName":  "Thick-Ink",
+        "Shape":  "tx-simple-leaf.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-simple-leaf.jpg"
+    },
+    {
+        "RawName":  "Estuary",
+        "Shape":  "tx-acrylic-impress.png",
+        "Grain":  "tx-oil-canvas.jpg",
+        "Thumbnail":  "th-acrylic-impress.jpg"
+    },
+    {
+        "RawName":  "Old-Growth",
+        "Shape":  "tx-gouache-drop.jpg",
+        "Grain":  "tx-acrylic-undercoat.jpg",
+        "Thumbnail":  "th-gouache-drop-2.jpg"
+    },
+    {
+        "RawName":  "Cascade",
+        "Shape":  "tx-oil-dash-3.png",
+        "Grain":  "tx-gouache-wash.jpg",
+        "Thumbnail":  "th-oil-dash-3.jpg"
+    },
+    {
+        "RawName":  "Amber-Grain",
+        "Shape":  "tx-charcoal-whisp.jpg",
+        "Grain":  "tx-crackle.png",
+        "Thumbnail":  "th-charcoal-whisp.png"
+    },
+    {
+        "RawName":  "Technical-Pen",
+        "Shape":  "tx-small-point.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-blank.png"
+    },
+    {
+        "RawName":  "Technical-Pencil",
+        "Shape":  "tx-ink-sponge.png",
+        "Grain":  "tx-sketch-paper.jpg",
+        "Thumbnail":  "th-ink-sponge.png"
+    },
+    {
+        "RawName":  "Tessellated",
+        "Shape":  "tx-gouache-drop.jpg",
+        "Grain":  "tx-tessellated.png",
+        "Thumbnail":  "th-tessellated.jpg"
+    },
+    {
+        "RawName":  "Striped-Grain",
+        "Shape":  "tx-pastel-board-wash.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-pastel-board-wash.jpg"
+    },
+    {
+        "RawName":  "Ember",
+        "Shape":  "tx-acrylic-square.jpg",
+        "Grain":  "tx-wax-crayon-paper.jpg",
+        "Thumbnail":  "th-acrylic-square.jpg"
+    },
+    {
+        "RawName":  "Tri-Grid",
+        "Shape":  "tx-tri-grid.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-tri-grid.png"
+    },
+    {
+        "RawName":  "Turpentine",
+        "Shape":  "tx-flat-brush.jpg",
+        "Grain":  "tx-canvas.jpg",
+        "Thumbnail":  "th-flat-brush.png"
+    },
+    {
+        "RawName":  "Twig",
+        "Shape":  "tx-orbs.png",
+        "Grain":  "tx-paper-mush.jpg",
+        "Thumbnail":  "th-orbs.png"
+    },
+    {
+        "RawName":  "Gnarled-Branch",
+        "Shape":  "tx-mess.jpg",
+        "Grain":  "tx-bark.jpg",
+        "Thumbnail":  "th-mess-2.png"
+    },
+    {
+        "RawName":  "Ultrafine-Nozzle",
+        "Shape":  "tx-ultra-soft.jpg",
+        "Grain":  "tx-clouds.jpg",
+        "Thumbnail":  "th-ultra-soft.png"
+    },
+    {
+        "RawName":  "Ornate",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-floral.png",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Vine-Charcoal",
+        "Shape":  "tx-charcoal-macro.jpg",
+        "Grain":  "tx-charcoal-vine.jpg",
+        "Thumbnail":  "th-charcoal-macro.png"
+    },
+    {
+        "RawName":  "Volcanic-Ash",
+        "Shape":  "tx-volcanic-shape.png",
+        "Grain":  "tx-volcanic-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Wash",
+        "Shape":  "tx-water-bleed.jpg",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-dry-acrylic-wash.jpg"
+    },
+    {
+        "RawName":  "Barren",
+        "Shape":  "tx-mess.jpg",
+        "Grain":  "tx-clay.jpg",
+        "Thumbnail":  "th-mess-2.png"
+    },
+    {
+        "RawName":  "Water-Bleed",
+        "Shape":  "tx-water-blotch-2.jpg",
+        "Grain":  "tx-wet-paper.jpg",
+        "Thumbnail":  "th-water-bleed.png"
+    },
+    {
+        "RawName":  "Water-Brush",
+        "Shape":  "tx-water-blotch-1.jpg",
+        "Grain":  "tx-stained-paper-1.jpg",
+        "Thumbnail":  "th-water-blotch-1.png"
+    },
+    {
+        "RawName":  "Water-Drip",
+        "Shape":  "tx-drip-2.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-drip-2.png"
+    },
+    {
+        "RawName":  "Water-Flicks",
+        "Shape":  "tx-water-flicks.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-water-flicks.png"
+    },
+    {
+        "RawName":  "Water-Pen",
+        "Shape":  "tx-ink-mess.jpg",
+        "Grain":  "tx-charcoal-rough.jpg",
+        "Thumbnail":  "th-ink-mess.png"
+    },
+    {
+        "RawName":  "Water",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-refract.png",
+        "Thumbnail":  "th-soft.png"
+    },
+    {
+        "RawName":  "Watercolor",
+        "Shape":  "tx-ink2.jpg",
+        "Grain":  "tx-cardboard.jpg",
+        "Thumbnail":  "th-ink2.png"
+    },
+    {
+        "RawName":  "Wattle-Dot",
+        "Shape":  "tx-medium-hard.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-medium-hard.png"
+    },
+    {
+        "RawName":  "Waveform",
+        "Shape":  "tx-waveform.png",
+        "Grain":  "tx-blank.png",
+        "Thumbnail":  "th-waveform.png"
+    },
+    {
+        "RawName":  "Wing-Sweep",
+        "Shape":  "tx-acrylic-dab-rough.jpg",
+        "Grain":  "tx-glitch-2.jpg",
+        "Thumbnail":  "th-acrylic-dab-rough-2.jpg"
+    },
+    {
+        "RawName":  "Wet-Acrylic",
+        "Shape":  "tx-mess.jpg",
+        "Grain":  "tx-charcoal-burnt.jpg",
+        "Thumbnail":  "th-mess-2.png"
+    },
+    {
+        "RawName":  "Wet-Glaze",
+        "Shape":  "tx-water-blotch-1.jpg",
+        "Grain":  null,
+        "Thumbnail":  "th-water-blotch-1.png"
+    },
+    {
+        "RawName":  "Wet-Sponge",
+        "Shape":  "tx-blotch-2.jpg",
+        "Grain":  "tx-clouds-2.png",
+        "Thumbnail":  "th-blotch-2.png"
+    },
+    {
+        "RawName":  "Wheat-Blade",
+        "Shape":  "tx-summer-shape.png",
+        "Grain":  "tx-summer-grain.png",
+        "Thumbnail":  null
+    },
+    {
+        "RawName":  "Flare-Burst",
+        "Shape":  "tx-water-blotch-1.jpg",
+        "Grain":  "tx-stained-paper-1.jpg",
+        "Thumbnail":  "th-water-blotch-1.png"
+    },
+    {
+        "RawName":  "Wildgrass",
+        "Shape":  "tx-wildgrass.jpg",
+        "Grain":  "tx-oil-board.jpg",
+        "Thumbnail":  "th-wildgrass.jpg"
+    },
+    {
+        "RawName":  "Willow-Charcoal",
+        "Shape":  "tx-willow.jpg",
+        "Grain":  "tx-willow-grain.jpg",
+        "Thumbnail":  "th-willow.png"
+    },
+    {
+        "RawName":  "Wood",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-wood.png",
+        "Thumbnail":  "th-wood.png"
+    },
+    {
+        "RawName":  "Cracked-Skin",
+        "Shape":  "tx-soft.png",
+        "Grain":  "tx-zombie.jpg",
+        "Thumbnail":  "th-soft.png"
+    }
+]

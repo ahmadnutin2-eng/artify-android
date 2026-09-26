@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The fallback slab, and the shape the panel is clipped to.
+
+    A frosted copy of the canvas is drawn over this, so on any device where that snapshot succeeds
+    this colour is never seen. It stays opaque on purpose: when the copy cannot be taken the panel
+    still has to be legible over white artwork, and a half-transparent grey would be the worst of
+    both - neither glass nor a readable surface.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#EC1B1C20" />
+    <corners android:radius="18dp" />
+</shape>

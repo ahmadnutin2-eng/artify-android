@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/canvas_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark"
+    tools:context=".ui.canvas.CanvasActivity">
+
+    <!-- Canvas Area -->
+    <com.procreate.android.canvas.DrawingView
+        android:id="@+id/drawing_canvas_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Top Left Toolbar (Actions, Adjustments, Selection, Transform) -->
+    <LinearLayout
+        android:id="@+id/toolbar_left"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_toolbar_pill"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_actions"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_actions"
+            android:contentDescription="@string/control_actions"
+            app:tint="@color/icon_tint_selector" />
+
+        <ImageButton
+            android:id="@+id/btn_library"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_library"
+            android:contentDescription="@string/library_title"
+            app:tint="@color/icon_tint_selector" />
+
+        <ImageButton
+            android:id="@+id/btn_adjustments"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_adjustments"
+            android:contentDescription="@string/control_adjustments"
+            app:tint="@color/icon_tint_selector" />
+
+        <!-- Filters sits beside Adjustments because both open a panel that changes how the layer
+             looks. It was previously only inside the Actions sheet, which is where nobody went
+             looking for it - the reported symptom was pressing a tool button on the opposite side
+             of the screen and waiting for a filter menu to appear. -->
+        <ImageButton
+            android:id="@+id/btn_filters"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_filters"
+            android:contentDescription="@string/filters_title"
+            app:tint="@color/icon_tint_selector" />
+
+        <!-- Phones cannot fit every tablet shortcut in two opposing toolbars. This button is
+             enabled only by CanvasActivity's compact layout and keeps every secondary tool one
+             tap away without shrinking the 48dp touch targets. -->
+        <ImageButton
+            android:id="@+id/btn_more_tools"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:background="@drawable/selector_icon_button"
+            android:contentDescription="@string/canvas_more_tools"
+            android:padding="12dp"
+            android:src="@drawable/ic_more"
+            android:visibility="gone"
+            app:tint="@color/icon_tint_selector" />
+
+        <View
+            android:id="@+id/divider_left_primary"
+            android:layout_width="1dp"
+            android:layout_height="22dp"
+            android:layout_marginHorizontal="2dp"
+            android:background="@color/divider_color" />
+
+        <ImageButton
+            android:id="@+id/btn_selection"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_selection"
+            android:contentDescription="@string/tool_selection"
+            app:tint="@color/icon_tint_selector" />
+
+        <ImageButton
+            android:id="@+id/btn_transform"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_transform"
+            android:contentDescription="@string/tool_transform"
+            app:tint="@color/icon_tint_selector" />
+
+        <View
+            android:id="@+id/divider_left_urban"
+            android:layout_width="1dp"
+            android:layout_height="22dp"
+            android:layout_marginHorizontal="2dp"
+            android:background="@color/divider_color" />
+
+        <ImageButton
+            android:id="@+id/btn_urban"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_urban_map"
+            android:contentDescription="Urban Design"
+            app:tint="@color/icon_tint_selector" />
+    </LinearLayout>
+
+    <!-- Top Right Toolbar (Brush, Smudge, Eraser, Layers, Colors) -->
+    <LinearLayout
+        android:id="@+id/toolbar_right"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/bg_toolbar_pill"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_brush"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_brush"
+            android:contentDescription="@string/tool_brush"
+            app:tint="@color/icon_tint_selector" />
+
+        <ImageButton
+            android:id="@+id/btn_smudge"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_smudge"
+            android:contentDescription="@string/tool_smudge"
+            app:tint="@color/icon_tint_selector" />
+
+        <!-- Blur sits next to Smudge because they are the two tools that reshape pixels already on
+             the layer rather than adding paint, and a user looking for one will look here for the
+             other. -->
+        <ImageButton
+            android:id="@+id/btn_blur"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_blur"
+            android:contentDescription="@string/tool_blur"
+            app:tint="@color/icon_tint_selector" />
+
+        <ImageButton
+            android:id="@+id/btn_eraser"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_eraser"
+            android:contentDescription="@string/tool_eraser"
+            app:tint="@color/icon_tint_selector" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="22dp"
+            android:layout_marginHorizontal="2dp"
+            android:background="@color/divider_color" />
+
+        <ImageButton
+            android:id="@+id/btn_layers"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_layers"
+            android:contentDescription="@string/control_layers"
+            app:tint="@color/icon_tint_selector" />
+
+        <ImageButton
+            android:id="@+id/btn_colors"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_colors"
+            android:contentDescription="@string/control_colors"
+            app:tint="@color/icon_tint_selector" />
+    </LinearLayout>
+
+    <!-- Floating Urban Design Toolbar Dock (Visible only in Urban Design Mode) -->
+    <com.procreate.android.urban.ui.UrbanToolbarDock
+        android:id="@+id/urban_toolbar_dock"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Sidebar Slider (Brush Size & Opacity) - explicitly boxed between the top toolbar and the
+         undo/redo panel below, so it can never overlap either regardless of screen height. Uses
+         VerticalFillSlider (a genuinely vertical pill-fill control, matching Procreate's own size/
+         opacity bars) instead of a rotated stock SeekBar - no rotation or thumb-footprint framing
+         needed since it's vertical by construction. -->
+    <LinearLayout
+        android:id="@+id/sidebar_slider"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_panel_rounded"
+        android:elevation="6dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/undo_redo_panel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_left">
+
+        <com.procreate.android.ui.canvas.VerticalFillSlider
+            android:id="@+id/slider_size"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="9dp"
+            android:contentDescription="@string/brush_size" />
+
+        <FrameLayout
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginVertical="10dp">
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_empty_icon_circle" />
+            <View
+                android:id="@+id/color_indicator"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_color_indicator" />
+        </FrameLayout>
+
+        <com.procreate.android.ui.canvas.VerticalFillSlider
+            android:id="@+id/slider_opacity"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="9dp"
+            android:contentDescription="@string/opacity" />
+
+        <TextView
+            android:id="@+id/tool_strength_label"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textColor="@color/procreate_accent_light"
+            android:textSize="9sp"
+            android:visibility="gone"
+            tools:text="تمويه\n75%"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <!-- Undo / Redo -->
+    <LinearLayout
+        android:id="@+id/undo_redo_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_panel_rounded"
+        android:elevation="6dp"
+        android:orientation="vertical"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_undo"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_undo"
+            android:contentDescription="@string/undo"
+            app:tint="@color/icon_color" />
+
+        <View
+            android:layout_width="26dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/divider_color" />
+
+        <ImageButton
+            android:id="@+id/btn_redo"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="2dp"
+            android:padding="12dp"
+            android:background="@drawable/selector_icon_button"
+            android:src="@drawable/ic_redo"
+            android:contentDescription="@string/redo"
+            app:tint="@color/icon_color" />
+    </LinearLayout>
+
+    <!-- CAD status readout. Every desktop CAD tool keeps the active tool, the drawing scale and
+         the snap state permanently visible, because all three silently change what a tap does.
+         Here they were only discoverable by opening a panel. Text-only and non-interactive so it
+         never competes with the canvas for touches. -->
+    <TextView
+        android:id="@+id/urban_status_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/screen_edge_margin"
+        android:background="@drawable/bg_toolbar_pill"
+        android:elevation="6dp"
+        android:paddingHorizontal="@dimen/space_l"
+        android:paddingVertical="@dimen/space_s"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="حدود الموقع · 1:1000 · متر · التقاط: عقد" />
+
+    <!-- Visible only in a matched online room. Tapping it offers a deliberate leave action. -->
+    <TextView
+        android:id="@+id/collaboration_status"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/bg_toolbar_pill"
+        android:clickable="true"
+        android:elevation="7dp"
+        android:focusable="true"
+        android:gravity="center"
+        android:minWidth="160dp"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:drawablePadding="8dp"
+        app:drawableStartCompat="@drawable/ic_online"
+        app:drawableTint="@color/procreate_accent_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="متصل مع فنان آخر"
+        tools:visibility="visible" />
+
+    <!-- Kept above the canvas and all controls only while a radial colour fan is present. Using
+         the activity content FrameLayout put the fan behind this ConstraintLayout on some
+         devices, so it could draw but never be seen or receive touches. -->
+    <FrameLayout
+        android:id="@+id/color_fan_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:elevation="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Shown only while an existing multi-layer project is decoded off the UI thread. It blocks
+         edits against the temporary canvas but still lets Android draw frames and answer input,
+         avoiding the old blank/frozen screen and its system ANR dialog. -->
+    <FrameLayout
+        android:id="@+id/canvas_loading_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#B5000000"
+        android:clickable="true"
+        android:elevation="30dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <ProgressBar
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/procreate_accent_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/project_loading"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

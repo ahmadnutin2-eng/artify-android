@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Each set in the rail is its own capsule, not a row in a list.
+
+    A flat list with an invisible background leaves the rail reading as one undivided column of
+    text, and the selected item as a rectangle stamped onto it. Giving every item a filled, fully
+    rounded shape makes the rail a stack of separate things to choose between, which is what it is.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/ripple_light">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#14FFFFFF" />
+            <corners android:radius="22dp" />
+        </shape>
+    </item>
+</ripple>

@@ -1,0 +1,47 @@
+# Android / Gradle output
+.gradle/
+.gradle-user-home/
+**/build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# IDE and operating-system files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Secrets and signing material
+keystore.properties
+keystore/
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+.env
+.env.*
+
+# Bundled local toolchains and distributables
+jdk/
+gradle-*.zip
+*.apk
+*.aab
+*.ipa
+release/
+
+# Reverse-engineering/reference dumps that are not application source
+Procreate_Extracted/
+Procreate_Assets_Extracted/
+MZ-brushes-free-arabic-classic-procreate.brushset.zip
+scratch_*
+artify_*.png
+preview.png
+artify_ui.xml
+
+# Runtime files
+*.log
+*.hprof

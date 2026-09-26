@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Design tokens for Artify, on Material 3's 4dp grid.
+
+    These exist so spacing is a shared decision rather than a number retyped per layout: the app
+    had accumulated 8/10/12/14/16/18/20dp paddings that were visually inconsistent for no reason.
+    Use these instead of literals in new layouts.
+-->
+<resources>
+    <!-- Spacing scale (4dp grid) -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">12dp</dimen>
+    <dimen name="space_l">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+
+    <!-- Minimum distance any interactive element keeps from a screen edge. Anything flush to the
+         edge gets clipped by rounded display corners and is awkward to hit on a held tablet. -->
+    <dimen name="screen_edge_margin">16dp</dimen>
+
+    <!-- Material 3 minimum touch target. The visual may be smaller; the container may not. -->
+    <dimen name="touch_target_min">48dp</dimen>
+
+    <!-- Icon sizes by context -->
+    <dimen name="icon_inline">16dp</dimen>
+    <dimen name="icon_toolbar">20dp</dimen>
+    <dimen name="icon_feature">26dp</dimen>
+
+    <!-- Corner radii -->
+    <dimen name="radius_s">8dp</dimen>
+    <dimen name="radius_m">14dp</dimen>
+    <dimen name="radius_l">20dp</dimen>
+
+    <!-- Gallery: target width of one project card; the span count is derived from this. -->
+    <dimen name="gallery_card_target_width">260dp</dimen>
+</resources>

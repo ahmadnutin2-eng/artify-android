@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The set cover's own shape. The two halves inside are flat colour and are clipped to these
+    corners by the card, so neither half needs a rounded drawable of its own.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#1A1B20" />
+    <corners android:radius="14dp" />
+</shape>

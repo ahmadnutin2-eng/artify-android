@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fill_title">Paint bucket</string>
+    <string name="fill_tolerance">Colour tolerance</string>
+    <string name="fill_tolerance_sub">How different a colour may be and still be filled</string>
+    <string name="fill_gap">Close gaps</string>
+    <string name="fill_gap_sub">Stops the fill escaping between hair or fur strokes. Higher closes wider gaps; too high rounds off sharp corners.</string>
+    <string name="fill_expand">Cover the line edge</string>
+    <string name="fill_expand_sub">Slides the fill under soft line edges so no pale outline is left</string>
+    <string name="fill_contiguous">Connected area only</string>
+    <string name="fill_contiguous_sub">Off fills every matching area on the layer</string>
+    <string name="fill_px_format">%1$d px</string>
+    <string name="fill_nothing">Nothing to fill here</string>
+</resources>

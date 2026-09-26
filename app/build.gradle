@@ -1,0 +1,181 @@
+import java.util.Properties
+
+plugins {
+    id 'com.android.application'
+    // AGP 9's Kotlin support is built in (no org.jetbrains.kotlin.android plugin needed/allowed).
+    // kapt (for Room's annotation processor) still needs the legacy-kapt bridge under built-in Kotlin.
+    id 'com.android.legacy-kapt' version '9.1.0'
+}
+
+// Loaded from ../keystore.properties - keeps the signing password out of this file itself.
+// See keystore.properties.example if this file is missing (e.g. on a machine other than the
+// one the upload key was generated on).
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+def hasSigningConfig = keystorePropertiesFile.exists()
+if (hasSigningConfig) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+// Loaded from ../local.properties - a developer-only AI credential (NVIDIA's Llama-hosted chat
+// API) used to turn a captured crash/issue report into readable text. Baked in as a
+// BuildConfig string ONLY for the debug build type below; release gets a hardcoded empty string
+// regardless of this file's contents, so the key can never ship inside the Play Store APK.
+def localPropertiesFile = rootProject.file('local.properties')
+def localProperties = new Properties()
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+def nvidiaApiKey = localProperties.getProperty('NVIDIA_API_KEY', '')
+// Same handling for the plan-analysis vision model. Kept separate from the crash-report key so
+// either feature can be enabled without the other, and so revoking one does not disable both.
+def geminiApiKey = localProperties.getProperty('GEMINI_API_KEY', '')
+
+// Debug APKs are often copied to a phone, tester, or issue report. Silently embedding local API
+// keys makes that otherwise harmless APK a credential leak. Runtime key entry already exists in
+// AiKeyStore, so debug builds are key-free by default; a developer who explicitly needs the old
+// convenience can opt in for a private build with -Partify.embedDebugAiKeys=true.
+def embedDebugAiKeys = providers.gradleProperty('artify.embedDebugAiKeys').orNull == 'true'
+def debugNvidiaApiKey = embedDebugAiKeys ? nvidiaApiKey : ''
+def debugGeminiApiKey = embedDebugAiKeys ? geminiApiKey : ''
+
+// Real-time collaboration uses a tiny WebSocket relay that is shipped in collaboration-server/.
+// The URL is configuration rather than a credential, so production CI may provide it with
+// -Partify.collabServerUrl=wss://... while a developer can keep a local value in local.properties.
+def collaborationServerUrl = providers.gradleProperty('artify.collabServerUrl').orNull
+        ?: System.getenv('ARTIFY_COLLAB_SERVER_URL')
+        ?: localProperties.getProperty('COLLABORATION_SERVER_URL', '')
+def escapedCollaborationServerUrl = collaborationServerUrl
+        .replace('\\', '\\\\')
+        .replace('"', '\\"')
+
+android {
+    namespace 'com.procreate.android'
+    compileSdk 36
+
+    defaultConfig {
+        // Must exactly match the package name already registered in Google Play Console for
+        // this app ("Artify - Drawing & Sketch App") - Play identifies "the same app" by this
+        // value plus the signing key, never by version numbers.
+        applicationId "artify.com"
+        minSdk 29
+        targetSdk 36
+        // The last build already uploaded to Play (Internal Test track) was versionCode 14
+        // (versionName 1.8) - Play rejects any new upload whose versionCode isn't higher than
+        // the highest one already uploaded to that app, on any track.
+        versionCode 15
+        versionName "1.9"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [appLabel: "@string/app_name"]
+        buildConfigField "String", "COLLAB_SERVER_URL", "\"${escapedCollaborationServerUrl}\""
+    }
+
+    if (hasSigningConfig) {
+        signingConfigs {
+            release {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasSigningConfig) {
+                signingConfig signingConfigs.release
+            }
+            // Hardcoded empty, deliberately ignoring nvidiaApiKey above - the Play Store build
+            // must never contain this key no matter what's in the developer's local.properties.
+            buildConfigField "String", "NVIDIA_API_KEY", "\"\""
+            buildConfigField "String", "GEMINI_API_KEY", "\"\""
+        }
+        debug {
+            // Optional side-by-side device build used when a previously installed APK was signed
+            // elsewhere. It lets performance/ANR checks run without uninstalling or touching the
+            // user's artwork data: gradlew assembleDebug -Partify.sidecar=true
+            if (project.hasProperty('artify.sidecar')) {
+                applicationIdSuffix ".codexqa"
+                versionNameSuffix "-qa"
+                // The user's store-signed original must stay installed to protect its projects.
+                // Give this side-by-side build an unmistakable launcher name so the improved copy
+                // cannot be confused with the old icon.
+                manifestPlaceholders = [appLabel: "Artify الجديد"]
+            }
+            buildConfigField "String", "NVIDIA_API_KEY", "\"${debugNvidiaApiKey}\""
+            buildConfigField "String", "GEMINI_API_KEY", "\"${debugGeminiApiKey}\""
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // Built-in Kotlin's android.kotlinOptions{} DSL was removed - it now just follows
+    // compileOptions.targetCompatibility above (already 17), so no separate block is needed.
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+}
+
+dependencies {
+    // Core Android
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Lifecycle & ViewModel
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+
+    // Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.6'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
+
+    // Room Database (save artworks). 2.6.1's bundled kotlinx-metadata-jvm reader can't parse
+    // metadata from AGP 9's built-in (much newer) Kotlin compiler - 2.8.4 can.
+    implementation 'androidx.room:room-runtime:2.8.4'
+    implementation 'androidx.room:room-ktx:2.8.4'
+    kapt 'androidx.room:room-compiler:2.8.4'
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+
+    // WebSocket transport for the two-person live drawing room.
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    // RecyclerView
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+
+    // CardView
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Fragment
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+
+    // Glide for image loading
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    // Google Play Billing - the only payment route Play permits for digital features, and the
+    // only one available at all in this app's main markets (the external-payment programs are
+    // limited to the US, the EEA and Japan). The library contributes the com.android.vending.BILLING
+    // permission through manifest merge; it is deliberately not written into our own manifest.
+    implementation 'com.android.billingclient:billing-ktx:9.1.0'
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    // Android ships org.json as a signature-only stub on the unit-test classpath: every method
+    // throws "not mocked", so any code that parses JSON is untestable without this. Test-scope
+    // only - the real Android implementation is used at runtime and nothing extra ships in the APK.
+    testImplementation 'org.json:json:20240303'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}

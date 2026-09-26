@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ================= لوحة الطبقات ================= -->
+    <string name="layers_count">عدد الطبقات: %1$d</string>
+    <string name="layer_add">إضافة طبقة</string>
+    <string name="layer_delete">حذف الطبقة</string>
+    <string name="layer_delete_last">لا يمكن حذف الطبقة الأخيرة</string>
+    <string name="layer_merge_down_none">لا توجد طبقة تحتها للدمج معها</string>
+    <string name="layer_blend">نمط الدمج</string>
+    <string name="layer_alpha_lock">قفل الشفافية</string>
+    <string name="layer_alpha_lock_sub">الرسم فوق البكسلات الموجودة فقط</string>
+    <string name="layer_clipping">قصّ على الطبقة السفلى</string>
+    <string name="layer_clipping_sub">تظهر هذه الطبقة داخل رسم الطبقة التي تحتها فقط</string>
+    <string name="layer_lock">قفل الطبقة</string>
+    <string name="layer_lock_sub">منع أي تعديل على هذه الطبقة</string>
+    <string name="layer_use_as_mask">إضافة / تحرير قناع الطبقة</string>
+    <string name="layer_use_as_mask_sub">ارسم بالأسود لإظهار الطبقات أسفلها، وبالأبيض لاستعادة هذه الطبقة</string>
+    <string name="layer_mask_added">تمت إضافة قناع. أنت ترسم الآن على القناع.</string>
+    <string name="layer_mask_editing">تحرير القناع: الأسود يخفي والأبيض يُظهر</string>
+    <string name="layer_pixels_editing">أنت تحرر الآن بكسلات الطبقة</string>
+    <string name="layer_mask_remove">حذف قناع الطبقة</string>
+    <string name="layer_mask_cleared">تمت إعادة القناع إلى الأبيض</string>
+    <string name="layer_mask_badge">قناع</string>
+    <string name="layer_editing_mask_format">%1$s — القناع</string>
+    <string name="layer_clipped_to">مقصوصة على: %1$s</string>
+    <string name="layer_clip_no_base">لا توجد طبقة تحتها للقصّ عليها، لذلك تبقى مخفية</string>
+    <string name="layer_mask_done_above">الطبقة التي فوق هذه ستظهر الآن داخل رسمها فقط</string>
+    <string name="layer_mask_done_pulled">نُقلت الطبقة السفلى إلى الأعلى وقُصّت على هذا الرسم</string>
+    <string name="layer_mask_none">لا توجد طبقة مجاورة لتُقصّ</string>
+    <string name="layer_mask_self_clipped">أوقف «القصّ» على هذه الطبقة أولاً</string>
+    <string name="layer_subtitle_format">%1$s · %2$d%%</string>
+    <string name="layer_opacity_format">%1$s: %2$d%%</string>
+    <string name="layer_drag_hint">اضغط مطولاً على الطبقة ثم اسحبها لتغيير ترتيبها</string>
+
+    <string name="blend_normal">عادي</string>
+    <string name="blend_multiply">ضرب</string>
+    <string name="blend_screen">شاشة</string>
+    <string name="blend_overlay">تراكب</string>
+    <string name="blend_darken">تغميق</string>
+    <string name="blend_lighten">تفتيح</string>
+    <string name="blend_color_dodge">تفتيح اللون</string>
+    <string name="blend_color_burn">حرق اللون</string>
+    <string name="blend_hard_light">ضوء حاد</string>
+    <string name="blend_soft_light">ضوء ناعم</string>
+    <string name="blend_difference">فرق</string>
+    <string name="blend_exclusion">استبعاد</string>
+    <string name="blend_hue">تدرّج اللون</string>
+    <string name="blend_saturation">التشبّع</string>
+    <string name="blend_color">اللون</string>
+    <string name="blend_luminosity">الإضاءة</string>
+    <string name="blend_add">إضافة</string>
+    <string name="blend_subtract">طرح</string>
+
+    <!-- ================= اللوحة ================= -->
+    <string name="display_smooth_title">عرض ناعم عند التكبير</string>
+    <string name="display_smooth_sub">أوقفه لرؤية البكسلات كما هي، مناسب لرسم البكسل آرت</string>
+    <string name="canvas_growth_blocked">وصلت اللوحة إلى حدّ الذاكرة. ادمج بعض الطبقات لتحرير مساحة ومواصلة التوسّع.</string>
+    <string name="layer_base_color">لون الطبقة الأساسية</string>
+    <string name="layer_base_color_sub">أبيض افتراضيًا؛ اضغط لاختيار أي لون دون تغيير الرسم</string>
+</resources>

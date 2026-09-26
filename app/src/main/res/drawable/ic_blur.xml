@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!--
+        A single disc whose edge dissolves into concentric rings: sharp core, progressively fainter
+        haloes. It has to read as "softening one spot under the brush".
+
+        The first version was a scatter of dots, which is the visual language of *effects* - the
+        button was tapped expecting a filters menu and only switched tools. Filters now own the
+        overlapping-circles icon; this one keeps to a single soft disc so the two are never
+        confused again.
+    -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.12"
+        android:pathData="M12,12m-10,0a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" />
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.22"
+        android:pathData="M12,12m-7.5,0a7.5,7.5 0 1,0 15,0a7.5,7.5 0 1,0 -15,0" />
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.42"
+        android:pathData="M12,12m-5.2,0a5.2,5.2 0 1,0 10.4,0a5.2,5.2 0 1,0 -10.4,0" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,12m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+</vector>
