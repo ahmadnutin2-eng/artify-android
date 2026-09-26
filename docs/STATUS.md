@@ -27,15 +27,17 @@ commit as any spec status change. Last updated **2026-09-26** by Claude (Planner
 | 1C | Recovery and corruption UX, safe delete | spec | Draft | needs 1A, 1B, 1D (Room v5) | `specs/PHASE-1C-recovery-and-corruption-ux.md` |
 | 1D | Migration tests and failure injection | spec | Draft | needs 1A (`FileOps`) | `specs/PHASE-1D-migration-and-failure-injection.md` |
 | 2B1 | Symmetry stroke isolation (defect) | spec | Draft | before 0B stroke baseline | `specs/PHASE-2B1-symmetry-stroke-isolation.md` |
-| 2B2 | QuickShape line weight depends on zoom (defect) | to spec | Recorded | — | `specs/PHASE-2B1-…` ("Adjacent finding") |
-| 6A | Collaboration threat model; relay off by default in release | to spec | Recorded (S1 privacy) | before any public release | `baseline/INVENTORY-0C…` P1 |
+| 2B2 | QuickShape commit fidelity: freehand residue, zoom-dependent weight, eraser paints colour | spec | Draft | after 2B1 (same code area) | `specs/PHASE-2B2-quickshape-commit-fidelity.md` |
+| 6A | Collaboration threat model + pre-release hardening (part A) | spec | Draft: part A **blocks public release of "Online"** | — | `specs/PHASE-6A-collaboration-threat-model.md` |
 | R-1 | Review: brush library vs Plans 2/3 | review | **Done** | — | `reviews/REVIEW-2026-09-26-brush-library.md` |
 
 ## Recommended execution order for the Executor
 
 1. **1A**, because data loss is S1 and the roadmap puts Plan 1 first. Its source areas don't overlap
    with 2B1, so these two can run in parallel on separate branches.
-2. **2B1**, a small, contained fix to the drawing path.
+2. **2B1**, a small, contained fix to the drawing path, then **2B2** on the same area.
+   **6A part A**: the relay-server items (scope 5) can run in parallel right away. The Android
+   items touch `CanvasActivity`/`CanvasViewModel` like 1A, so start them after 1A merges.
 3. **0A** `gradlew` + **0B** harness, so every later phase has baselines.
 4. **1D**, then **1B**, then **1C**.
 5. **0A2** replacements (after the owner's decisions), then **0D**.
