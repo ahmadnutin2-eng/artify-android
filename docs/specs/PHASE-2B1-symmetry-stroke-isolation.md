@@ -141,6 +141,47 @@ zoom makes a snapped shape's line weight depend on the zoom level at which it wa
 a plain `Paint`, not the brush engine, so textured brushes lose their texture on snap. Proposed as
 Plan 2B2.
 
-## Implementation evidence / Review outcome / Sign-off
+## Implementation evidence
+
+- Executor: Claude Code (local session on the product owner's Windows workstation). The spec was
+  written by Claude (cloud Planner); review must be done by a different agent (Antigravity/Codex).
+- Branch `fix/2B1-symmetry-strokes`, base `40c5ff9` (planning round 3 on top of `5941ab1`).
+- New files: `canvas/SymmetryMath.kt` (pure reflection maths), `canvas/SymmetryStroke.kt` (primary
+  engine + one pooled engine per mirrored branch), `test/.../SymmetryMathTest.kt`,
+  `androidTest/.../SymmetryStrokeInstrumentedTest.kt`.
+- Changed: `BrushEngine.kt` (`mirrorX`/`mirrorY`, `copyStrokeSetupFrom`), `DrawingView.kt` (every
+  stroke-path call goes through `SymmetryStroke`; dirty rect is the union of all branches).
+
+**Deviation from the design (deliberate):** scope item 2 proposed reflecting the azimuth angle
+(θ′ = π − θ / −θ). That only yields a mirror for tips that are symmetric about their own axes, and
+the formulas assume a from-X-axis convention while `MotionEvent` orientation is clockwise from up.
+Instead each mirror engine computes the stamp exactly as the primary would (it un-reflects the
+travel direction for `orientToStroke`, and receives the raw azimuth) and then reflects the whole
+stamp matrix about the stamp centre. The mirror is therefore exact for any tip, including
+asymmetric custom nibs, and the canvas-anchored grain stays anchored (the grain shader uses the
+inverse of the same matrix).
+
+**Other notes:**
+- Kufic grid pen: each filled module also fills the module containing the reflected point.
+- Smudge and blur mirror per branch, each with its own spacing accumulator.
+- Tap stamps one dot per branch; lift flushes every branch; eyedropper/cancel end every branch.
+- Undo: mirrors share `beforeWrite`; `captureBeforeEdit` is already idempotent per tile
+  (`CanvasViewModel.kt:522`), so one gesture stays one undo step.
+- Seeds: mirror engines keep independent (time-seeded) RNGs until 0D E7 adds injectable seeds.
+- QuickShape is still not mirrored; handled in 2B2 scope 5.
+
+Commands and results (2026-09-26, JDK 17.0.10 from `jdk/`):
+
+```
+gradlew.bat :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest -Partify.sidecar=true
+BUILD SUCCESSFUL — 30 JVM test classes, 0 failures; SymmetryMathTest 10/10
+```
+
+**Not yet run:** `SymmetryStrokeInstrumentedTest` (AC1, AC2, AC4, AC5 engine-level, AC6) and the
+device matrix, because no device or emulator was connected (`adb devices` empty). Run with
+`gradlew.bat :app:connectedDebugAndroidTest -Partify.sidecar=true` once a device is attached.
+AC7 (quad `Stroke.process` p95) needs the 0B harness.
+
+## Review outcome / Sign-off
 
 To be completed per `docs/specs/README.md`.

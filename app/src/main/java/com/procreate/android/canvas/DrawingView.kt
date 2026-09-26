@@ -153,6 +153,10 @@ class DrawingView @JvmOverloads constructor(
     }
 
     private val brushEngine = BrushEngine()
+    /** Runs the primary engine plus one mirror engine per symmetry branch for every stroke. */
+    private val symmetryStroke = SymmetryStroke(brushEngine)
+    /** Union of every branch's dirty rectangle for the batch being painted. */
+    private val batchDirty = RectF()
     val selectionTool = SelectionTool()
     val transformTool = TransformTool()
     var viewModel: CanvasViewModel? = null
@@ -3259,8 +3263,23 @@ class DrawingView @JvmOverloads constructor(
                 // the moment a finger touches the canvas.
                 brushEngine.stylusAzimuthAvailable =
                     event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS
-                brushEngine.startStroke(x, y, pressure, stylusTilt(event), stylusAzimuth(event))
-                brushEngine.resetDirty()
+                // The symmetry axis is fixed for the whole stroke at the paper's centre as it is
+                // now; if an open canvas grows mid-stroke the axis moves with the artwork.
+                val paper = vm.layers.value?.getOrNull(vm.activeLayerIndex.value ?: -1)?.bitmap
+                    ?: vm.layers.value?.firstOrNull()?.bitmap
+                val mirrorVertical =
+                    symmetryMode == SymmetryMode.VERTICAL || symmetryMode == SymmetryMode.QUAD
+                val mirrorHorizontal =
+                    symmetryMode == SymmetryMode.HORIZONTAL || symmetryMode == SymmetryMode.QUAD
+                symmetryStroke.begin(
+                    vertical = mirrorVertical && paper != null,
+                    horizontal = mirrorHorizontal && paper != null,
+                    centerX = (paper?.width ?: 0) / 2f,
+                    centerY = (paper?.height ?: 0) / 2f,
+                    x = x, y = y, pressure = pressure,
+                    tilt = stylusTilt(event), azimuth = stylusAzimuth(event)
+                )
+                symmetryStroke.resetDirty()
                 drawingAudioEngine.setBrushMaterial(brushEngine.properties.type, vm.toolMode.value ?: ToolMode.DRAW)
                 vm.activeLayerIndex.value?.let { vm.prepareEdit(it) }
 
@@ -3385,7 +3404,7 @@ class DrawingView @JvmOverloads constructor(
                     eyedropperActive = false
                     isDrawing = false
                     pendingDot = false
-                    brushEngine.endStroke()
+                    symmetryStroke.end(null, null)
                     invalidate()
                     return
                 }
@@ -3424,7 +3443,7 @@ class DrawingView @JvmOverloads constructor(
                                     // isolated squares in a composition are placed.
                                     fillGridCell(canvas, downCanvasX, downCanvasY, module)
                                 } else {
-                                    brushEngine.stampDot(
+                                    symmetryStroke.stampDot(
                                         canvas, target, downCanvasX, downCanvasY, downPressure,
                                         stylusTilt(event), stylusAzimuth(event)
                                     )
@@ -3438,7 +3457,7 @@ class DrawingView @JvmOverloads constructor(
                                 canvas, target, event.x, event.y, pressure, event.eventTime,
                                 stylusTilt(event), stylusAzimuth(event)
                             )
-                            brushEngine.endStroke(canvas, target)
+                            symmetryStroke.end(canvas, target)
                         }
                     }
                 }
@@ -3508,6 +3527,12 @@ class DrawingView @JvmOverloads constructor(
     }
 
     private fun fillGridCell(canvas: Canvas, x: Float, y: Float, module: Float) {
+        fillGridCellAt(canvas, x, y, module)
+        // A symmetric Kufic composition sets the mirrored module too.
+        symmetryStroke.forEachMirroredPoint(x, y) { mx, my -> fillGridCellAt(canvas, mx, my, module) }
+    }
+
+    private fun fillGridCellAt(canvas: Canvas, x: Float, y: Float, module: Float) {
         val column = floor(x / module).toInt()
         val row = floor(y / module).toInt()
         // Pack both coordinates into one key; a canvas can be tens of thousands of cells across,
@@ -3651,11 +3676,11 @@ class DrawingView @JvmOverloads constructor(
         smoothedPressure += (pressure - smoothedPressure) * pressureResponse
 
         if (viewModel?.toolMode?.value == ToolMode.SMUDGE) {
-            brushEngine.drawSmudgeSegment(canvas, target, lastSmudgeX, lastSmudgeY, smoothedX, smoothedY, smoothedPressure)
+            symmetryStroke.smudgeSegment(canvas, target, lastSmudgeX, lastSmudgeY, smoothedX, smoothedY, smoothedPressure)
             lastSmudgeX = smoothedX
             lastSmudgeY = smoothedY
         } else if (viewModel?.toolMode?.value == ToolMode.BLUR) {
-            brushEngine.drawBlurSegment(canvas, target, lastSmudgeX, lastSmudgeY, smoothedX, smoothedY, smoothedPressure)
+            symmetryStroke.blurSegment(canvas, target, lastSmudgeX, lastSmudgeY, smoothedX, smoothedY, smoothedPressure)
             lastSmudgeX = smoothedX
             lastSmudgeY = smoothedY
         } else {
@@ -3667,31 +3692,11 @@ class DrawingView @JvmOverloads constructor(
                 paintGridSegment(canvas, smoothedX, smoothedY, module)
                 return
             }
-            brushEngine.strokeTo(
+            // Every mirrored branch runs in its own engine with its own spline; see SymmetryStroke.
+            symmetryStroke.strokeTo(
                 canvas, target, smoothedX, smoothedY, smoothedPressure, smoothedVelocity,
                 tilt, azimuth
             )
-            // Symmetry mirroring
-            if (symmetryMode != SymmetryMode.NONE) {
-                val cx = target.width / 2f
-                val cy = target.height / 2f
-                val mx = 2 * cx - smoothedX
-                val my = 2 * cy - smoothedY
-                when (symmetryMode) {
-                    SymmetryMode.VERTICAL -> {
-                        brushEngine.strokeTo(canvas, target, mx, smoothedY, smoothedPressure, smoothedVelocity)
-                    }
-                    SymmetryMode.HORIZONTAL -> {
-                        brushEngine.strokeTo(canvas, target, smoothedX, my, smoothedPressure, smoothedVelocity)
-                    }
-                    SymmetryMode.QUAD -> {
-                        brushEngine.strokeTo(canvas, target, mx, smoothedY, smoothedPressure, smoothedVelocity)
-                        brushEngine.strokeTo(canvas, target, smoothedX, my, smoothedPressure, smoothedVelocity)
-                        brushEngine.strokeTo(canvas, target, mx, my, smoothedPressure, smoothedVelocity)
-                    }
-                    SymmetryMode.NONE -> Unit
-                }
-            }
         }
     }
 
@@ -3738,12 +3743,12 @@ class DrawingView @JvmOverloads constructor(
         val useScratch = useAlphaLock || uniformCoverage
         // The master opacity is applied at fold time for a uniform brush, so the stamps themselves
         // must go down at full strength; otherwise it would be applied twice.
-        brushEngine.deferStrokeOpacity = uniformCoverage
+        symmetryStroke.setDeferStrokeOpacity(uniformCoverage)
 
         val selectionPath = selectionTool.getSelectionPath()
         val hasSelection = !selectionPath.isEmpty
 
-        brushEngine.resetDirty()
+        symmetryStroke.resetDirty()
 
         if (useScratch) {
             // The whole stroke accumulates in the scratch and is folded back against an untouched
@@ -3762,7 +3767,7 @@ class DrawingView @JvmOverloads constructor(
             block(scratchCanvas, scratch)
             if (hasSelection) scratchCanvas.restore()
 
-            val painted = brushEngine.dirtyRect
+            val painted = symmetryStroke.collectDirty(batchDirty)
             if (!painted.isEmpty) {
                 val layerCanvas = Canvas(targetBitmap)
                 layerCanvas.save()
@@ -3790,7 +3795,7 @@ class DrawingView @JvmOverloads constructor(
             if (hasSelection) canvas.restore()
         }
 
-        val painted = brushEngine.dirtyRect
+        val painted = symmetryStroke.collectDirty(batchDirty)
         if (!painted.isEmpty) {
             strokeDirty.union(painted)
             // Oversized layers are displayed through a viewport tile cache. Retain every
@@ -3856,7 +3861,7 @@ class DrawingView @JvmOverloads constructor(
     private fun applyExpansionOffset(offset: PointF?) {
         offset ?: return
         canvasMatrix.preTranslate(-offset.x, -offset.y)
-        brushEngine.offsetActiveStroke(offset.x, offset.y)
+        symmetryStroke.offset(offset.x, offset.y)
         smoothedX += offset.x; smoothedY += offset.y
         downCanvasX += offset.x; downCanvasY += offset.y
         lastSmudgeX += offset.x; lastSmudgeY += offset.y
@@ -4038,7 +4043,7 @@ class DrawingView @JvmOverloads constructor(
         isDrawing = false
         stopEdgePan()
         pendingDot = false
-        brushEngine.endStroke()
+        symmetryStroke.end(null, null)
         val index = viewModel?.activeLayerIndex?.value
         if (!strokeDirty.isEmpty && index != null) {
             viewModel?.commitPixelEdit(index, strokeDirty)

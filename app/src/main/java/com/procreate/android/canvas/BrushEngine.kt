@@ -169,6 +169,28 @@ class BrushEngine {
     var deferStrokeOpacity: Boolean = false
 
     /**
+     * Set on the extra engines a symmetric stroke runs, one per reflected branch: this engine is
+     * fed reflected positions and lays every stamp as the mirror image of the one the primary
+     * engine lays. Reflecting the stamp itself, rather than approximating it with a rotation, keeps
+     * the mirror exact for asymmetric tips and for nibs that follow the barrel or a fixed cut.
+     */
+    var mirrorX: Boolean = false
+    var mirrorY: Boolean = false
+
+    /**
+     * Take everything a stroke needs from [source] so this engine paints the same brush. Used to
+     * set up the mirror engines of a symmetric stroke at the moment it starts.
+     */
+    fun copyStrokeSetupFrom(source: BrushEngine) {
+        properties = source.properties
+        color = source.color
+        renderScale = source.renderScale
+        stylusAzimuthAvailable = source.stylusAzimuthAvailable
+        beforeWrite = source.beforeWrite
+        deferStrokeOpacity = source.deferStrokeOpacity
+    }
+
+    /**
      * Recolours the grain without rebuilding its tile.
      *
      * The grain tile bakes the brush colour into its pixels, so a drifting colour would need the
@@ -731,12 +753,21 @@ class BrushEngine {
         dynamicOpacity += (rng.nextFloat() - 0.5f) * properties.opacityJitter * 2f
         dynamicOpacity = dynamicOpacity.coerceIn(0.02f, 1f)
 
+        val mirrored = mirrorX || mirrorY
         val tracksBarrel = properties.azimuthTracking > 0f && stylusAzimuthAvailable
         var rotation = when {
             tracksBarrel ->
                 StylusResponse.nibRotationDegrees(azimuth, properties.azimuthTracking, properties.angle)
-            properties.orientToStroke ->
-                Math.toDegrees(dirAngle.toDouble()).toFloat() + properties.angle
+            properties.orientToStroke -> {
+                // A mirror branch travels the reflected path. Undo that reflection here, so the
+                // stamp is rotated exactly as the primary one and then reflected below as a whole.
+                val sourceDirection = if (mirrored) {
+                    SymmetryMath.reflectDirection(dirAngle, mirrorX, mirrorY)
+                } else {
+                    dirAngle
+                }
+                Math.toDegrees(sourceDirection.toDouble()).toFloat() + properties.angle
+            }
             else -> properties.angle
         }
         rotation += (rng.nextFloat() - 0.5f) * properties.angleJitter * 2f
@@ -760,6 +791,14 @@ class BrushEngine {
         stampMatrix.reset()
         stampMatrix.postScale(scale, scale)
         stampMatrix.postRotate(rotation, tip.width * scale / 2f, tip.height * scale / 2f)
+        if (mirrored) {
+            stampMatrix.postScale(
+                if (mirrorX) -1f else 1f,
+                if (mirrorY) -1f else 1f,
+                tip.width * scale / 2f,
+                tip.height * scale / 2f
+            )
+        }
         stampMatrix.postTranslate(
             finalX - tip.width * scale / 2f,
             finalY - tip.height * scale / 2f
