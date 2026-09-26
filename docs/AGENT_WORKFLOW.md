@@ -100,3 +100,25 @@ Role: Reviewer. Review the implementation branch against docs/specs/PHASE-XX-nam
 Prioritize data loss, correctness, performance, security, lifecycle, accessibility, and missing
 tests. Report findings by severity with file and line evidence. Do not implement fixes.
 ```
+
+## Claude ↔ Codex collaboration (added 2026-09-26)
+
+Claude (Anthropic) joins as a second independent agent, so no model reviews its own work. The
+handoff medium is this GitHub repository; neither agent needs a direct connection to the other.
+
+| Step | Default owner | Alternate |
+|------|---------------|-----------|
+| Plan / spec (`docs/specs/`) | Claude or Codex Cloud | the other |
+| Implement + device evidence | Local Codex / Antigravity agent on Windows | — |
+| Independent review (`docs/reviews/`) | whichever agent did **not** write the spec | — |
+| Disagreement | Both positions recorded in the spec's "Review outcome"; product owner decides | — |
+
+Rules:
+
+- Each agent states its role and the exact base commit at the top of every document it writes.
+- A reviewer answers a spec or diff in `docs/reviews/REVIEW-<date>-<topic>.md`. The author replies
+  inline under each finding (`Response:`) rather than editing the finding away.
+- Claude cannot build or install the APK from its cloud session (no Android SDK or device). Every
+  runtime claim from Claude is marked "static reading" and must be confirmed by the Executor.
+- When one agent's quota is exhausted, the other may take the Planner or Reviewer role, but never
+  both roles on the same change.
