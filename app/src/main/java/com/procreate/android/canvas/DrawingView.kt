@@ -270,12 +270,21 @@ class DrawingView @JvmOverloads constructor(
     private val strokePointPool = mutableListOf<PointF>()
     private var strokePointCount = 0
     private var activeQuickShape: QuickShape? = null
+    /** Pen input of the current stroke, so a snapped shape keeps the weight it was drawn with. */
+    private val strokeInput = StrokeInputStats()
+    // Captured when the shape snaps and used for both its preview and its commit, so they match.
+    private var quickShapePressure = 1f
+    private var quickShapeTilt = 0f
+    private var quickShapeAzimuth = 0f
     private val quickShapeHoldMs = 450L
     private val quickShapeRunnable = Runnable {
         if (!isDrawing || !isQuickShapeEnabled || isUrbanMode) return@Runnable
         val shape = QuickShapeEngine.detect(currentStrokePoints)
         if (shape != null) {
             activeQuickShape = shape
+            quickShapePressure = strokeInput.medianPressure(downPressure)
+            quickShapeTilt = strokeInput.medianTilt()
+            quickShapeAzimuth = strokeInput.meanAzimuth()
             performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS)
             val name = if (context.resources.configuration.locales[0].language == "ar") shape.nameAr() else shape.nameEn()
             gestureListener?.onHint(context.getString(R.string.quickshape_snapped, name))
@@ -3280,6 +3289,8 @@ class DrawingView @JvmOverloads constructor(
                     tilt = stylusTilt(event), azimuth = stylusAzimuth(event)
                 )
                 symmetryStroke.resetDirty()
+                strokeInput.reset()
+                strokeInput.add(pressure, stylusTilt(event), stylusAzimuth(event))
                 drawingAudioEngine.setBrushMaterial(brushEngine.properties.type, vm.toolMode.value ?: ToolMode.DRAW)
                 vm.activeLayerIndex.value?.let { vm.prepareEdit(it) }
 
@@ -3412,24 +3423,7 @@ class DrawingView @JvmOverloads constructor(
                 if (activeQuickShape != null) {
                     val shape = activeQuickShape!!
                     activeQuickShape = null
-                    paintBatch { canvas, target ->
-                        val path = QuickShapeEngine.toPath(shape)
-                        val bounds = RectF()
-                        path.computeBounds(bounds, true)
-                        val capturePad = brushEngine.properties.size + 6f
-                        bounds.inset(-capturePad, -capturePad)
-                        val activeIndex = viewModel?.activeLayerIndex?.value
-                        if (activeIndex != null) viewModel?.captureBeforeEdit(activeIndex, bounds)
-                        val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                            style = Paint.Style.STROKE
-                            strokeWidth = brushEngine.properties.size * currentScale()
-                            color = brushEngine.color
-                            strokeCap = Paint.Cap.ROUND
-                            strokeJoin = Paint.Join.ROUND
-                            alpha = (brushEngine.properties.opacity * 255).toInt().coerceIn(0, 255)
-                        }
-                        canvas.drawPath(path, strokePaint)
-                    }
+                    commitQuickShape(shape)
                 } else {
                     paintBatch { canvas, target ->
                         if (pendingDot) {
@@ -3466,6 +3460,87 @@ class DrawingView @JvmOverloads constructor(
                 finishStroke()
                 emitLocalCollaborationPoint(StrokePhase.END, x, y, pressure)
                 collaborationStrokeId = null
+            }
+        }
+    }
+
+    /**
+     * Replace the freehand stroke with the shape it snapped to, painted by the brush itself.
+     *
+     * The freehand line was already on the layer by the time the pen paused, so it is first put
+     * back to the pixels the gesture started from; drawing the shape over it left the wobbly
+     * original and the clean shape side by side. The shape is then fed through the same engines a
+     * stroke uses, which gives it the brush's size in canvas pixels (not scaled by zoom), its tip,
+     * grain, the stroke's median pressure, eraser behaviour, uniform-coverage opacity and symmetry. The
+     * gesture remains a single undo step whose before-image is the untouched layer.
+     */
+    private fun commitQuickShape(shape: QuickShape) {
+        val vm = viewModel ?: return
+        val index = vm.activeLayerIndex.value ?: return
+
+        val restored = vm.restoreCapturedTiles(index)
+        if (!restored.isEmpty) {
+            val layer = vm.layers.value?.getOrNull(index)
+            val edited = if (layer?.isEditingMask == true) layer.maskBitmap else layer?.bitmap
+            edited?.let { LayerCompositor.invalidateBitmapRegion(it, restored) }
+            strokeDirty.union(restored)
+            invalidateCanvasRect(restored)
+        }
+        // Scratch buffers still hold the freehand stroke; start them again from the restored layer.
+        resetAlphaLockBuffers()
+        gridCellsFilledThisStroke.clear()
+
+        val pressure = quickShapePressure
+        val tilt = quickShapeTilt
+        val azimuth = quickShapeAzimuth
+        val points = QuickShapeEngine.sample(shape, brushEngine.shapeSampleSpacing(pressure, tilt))
+        if (points.size < 4) return
+        symmetryStroke.restart(points[0], points[1], pressure, tilt, azimuth)
+
+        paintBatch { canvas, target ->
+            val mode = vm.toolMode.value
+            val module = gridModuleSize()
+            when {
+                mode == ToolMode.SMUDGE || mode == ToolMode.BLUR -> {
+                    // These tools process a whole segment per call; one call per sub-pixel sample
+                    // would re-blur the same area thousands of times.
+                    val minStep = max(2f, brushEngine.properties.size * 0.25f)
+                    var fromX = points[0]
+                    var fromY = points[1]
+                    var i = 2
+                    while (i < points.size) {
+                        val x = points[i]
+                        val y = points[i + 1]
+                        val last = i + 2 >= points.size
+                        if (last || hypot(x - fromX, y - fromY) >= minStep) {
+                            if (mode == ToolMode.SMUDGE) {
+                                symmetryStroke.smudgeSegment(canvas, target, fromX, fromY, x, y, pressure)
+                            } else {
+                                symmetryStroke.blurSegment(canvas, target, fromX, fromY, x, y, pressure)
+                            }
+                            fromX = x
+                            fromY = y
+                        }
+                        i += 2
+                    }
+                }
+                module != null -> {
+                    lastGridX = points[0]
+                    lastGridY = points[1]
+                    var i = 2
+                    while (i < points.size) {
+                        paintGridSegment(canvas, points[i], points[i + 1], module)
+                        i += 2
+                    }
+                }
+                else -> {
+                    var i = 2
+                    while (i < points.size) {
+                        symmetryStroke.strokeTo(canvas, target, points[i], points[i + 1], pressure, 0f, tilt, azimuth)
+                        i += 2
+                    }
+                    symmetryStroke.end(canvas, target)
+                }
             }
         }
     }
@@ -3651,6 +3726,8 @@ class DrawingView @JvmOverloads constructor(
         lastTouchX = screenX
         lastTouchY = screenY
         lastEventTime = eventTime
+        // Genuine pen samples only; the lift drain repeats the final sample and would skew it.
+        if (forcedResponse == null) strokeInput.add(pressure, tilt, azimuth)
 
         val p = screenToCanvas(screenX, screenY, sampleCanvasPoint)
         // Stroke stabilization: the drawn point trails the raw touch point.
@@ -4898,13 +4975,28 @@ class DrawingView @JvmOverloads constructor(
             val invZoom = 1f / currentScale().coerceAtLeast(0.05f)
             val previewPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 style = Paint.Style.STROKE
-                strokeWidth = (brushEngine.properties.size * 1.05f).coerceAtLeast(2.5f)
+                // The weight the commit will lay, in canvas pixels, so preview and result agree.
+                strokeWidth = brushEngine.previewSize(quickShapePressure, quickShapeTilt)
+                    .coerceAtLeast(2.5f * invZoom)
                 color = Color.argb(220, 0, 229, 255)
                 strokeCap = Paint.Cap.ROUND
                 strokeJoin = Paint.Join.ROUND
             }
             val path = QuickShapeEngine.toPath(shape)
             canvas.drawPath(path, previewPaint)
+            // Symmetry commits a reflected copy per branch; preview those too.
+            for (i in 0 until symmetryStroke.mirrorCount()) {
+                val branch = symmetryStroke.branchAt(i)
+                canvas.save()
+                canvas.scale(
+                    if (branch.mirrorX) -1f else 1f,
+                    if (branch.mirrorY) -1f else 1f,
+                    symmetryStroke.axisX,
+                    symmetryStroke.axisY
+                )
+                canvas.drawPath(path, previewPaint)
+                canvas.restore()
+            }
         }
 
         // Sheet cards share one collision-aware layout.  Scale, legend and tables used to be

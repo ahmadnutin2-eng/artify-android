@@ -104,7 +104,39 @@ None. Revert the single commit to roll back.
 On the phone and the stylus tablet: draw and hold for each of the 5 shapes, at 3 zoom levels, with an
 ink, a charcoal, a reed and the eraser; undo and redo; save and reopen.
 
-## Implementation evidence / Review outcome / Sign-off
+## Implementation evidence
+
+- Executor: Claude Code (local session). Branch `fix/2B2-quickshape-commit`, stacked on
+  `fix/2B1-symmetry-strokes` (it uses 2B1's `SymmetryStroke`). Review by a different agent.
+- `CanvasViewModel.restoreCapturedTiles(layerIndex)`: writes every captured before-tile back with
+  SRC and keeps the capture, so `commitPixelEdit` still records the pre-gesture before-image.
+- `DrawingView.commitQuickShape`: revert → reset scratch/Alpha-Lock buffers → sample the shape
+  (`QuickShapeEngine.sample`, pure core in `QuickShapeSampler`) → feed every sample through
+  `SymmetryStroke` in one `paintBatch` → `end`. Smudge/blur get coalesced segments; the Kufic grid
+  pen fills cells along the shape.
+- Pressure/tilt: median of the freehand stroke's raw samples (`StrokeInputStats`); azimuth is the
+  circular mean (an arithmetic median of angles is wrong across the ±π wrap). Captured when the
+  shape snaps and used for both preview and commit.
+- Preview: width `BrushEngine.previewSize(pressure, tilt)` (jitter-free), plus one reflected preview
+  per symmetry branch.
+- Taper (scope 3, optional): **not implemented** — `BrushProperties` has no taper setting today, so
+  there is nothing to honour. Left as the product-owner decision below.
+
+Commands and results (2026-09-26):
+
+```
+gradlew.bat :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest -Partify.sidecar=true
+BUILD SUCCESSFUL — 306 JVM tests, 0 failures
+  QuickShapeSampleTest 7/7, StrokeInputStatsTest 4/4, SymmetryMathTest 10/10
+```
+
+**Not yet run (no device attached):** `QuickShapeCommitInstrumentedTest` (AC1 residue, AC2 zoom
+weight + preview parity, AC3 eraser, AC6 one undo step). AC4 (50% uniform opacity), AC5 (grain
+variance) and AC7 (symmetry snap) need the on-device matrix. Collaboration: the existing
+`finishStroke` patch covers `strokeDirty`, which now includes the restored freehand area, so the
+partner receives the reverted pixels plus the shape.
+
+## Review outcome / Sign-off
 
 To be completed per `docs/specs/README.md`. Product-owner decision: whether a snapped shape should
-keep the brush's taper (scope 3, optional).
+keep the brush's taper (scope 3, optional) once brushes gain a taper setting.

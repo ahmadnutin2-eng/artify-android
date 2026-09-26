@@ -58,6 +58,21 @@ internal class SymmetryStroke(private val primary: BrushEngine) {
         }
     }
 
+    /**
+     * Begin a fresh stroke on the same branches and axis as the current one, at ([x], [y]). Used
+     * when the gesture replaces what it drew so far, as a QuickShape does at lift.
+     */
+    fun restart(x: Float, y: Float, pressure: Float, tilt: Float, azimuth: Float) {
+        primary.startStroke(x, y, pressure, tilt, azimuth)
+        for (i in mirrors.indices) {
+            val branch = branches[i]
+            mirrors[i].startStroke(mirrorX(x, branch), mirrorY(y, branch), pressure, tilt, azimuth)
+        }
+    }
+
+    val axisX: Float get() = centerX
+    val axisY: Float get() = centerY
+
     fun strokeTo(
         canvas: Canvas,
         target: Bitmap,

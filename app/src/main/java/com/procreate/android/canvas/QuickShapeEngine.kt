@@ -123,6 +123,34 @@ object QuickShapeEngine {
     }
 
     /**
+     * Samples [shape] into x,y pairs no more than [spacingPx] canvas pixels apart, for feeding the
+     * brush engine. Closed shapes end on their first point. See [QuickShapeSampler].
+     */
+    fun sample(shape: QuickShape, spacingPx: Float): FloatArray = when (shape) {
+        is QuickShape.Line ->
+            QuickShapeSampler.line(shape.start.x, shape.start.y, shape.end.x, shape.end.y, spacingPx)
+        is QuickShape.Circle ->
+            QuickShapeSampler.ellipse(shape.center.x, shape.center.y, shape.radius, shape.radius, spacingPx)
+        is QuickShape.Ellipse -> QuickShapeSampler.ellipse(
+            shape.bounds.centerX(), shape.bounds.centerY(),
+            shape.bounds.width() / 2f, shape.bounds.height() / 2f, spacingPx
+        )
+        is QuickShape.Rectangle -> QuickShapeSampler.polygon(
+            floatArrayOf(
+                shape.bounds.left, shape.bounds.top,
+                shape.bounds.right, shape.bounds.top,
+                shape.bounds.right, shape.bounds.bottom,
+                shape.bounds.left, shape.bounds.bottom
+            ),
+            closed = true, spacing = spacingPx
+        )
+        is QuickShape.Triangle -> QuickShapeSampler.polygon(
+            floatArrayOf(shape.p1.x, shape.p1.y, shape.p2.x, shape.p2.y, shape.p3.x, shape.p3.y),
+            closed = true, spacing = spacingPx
+        )
+    }
+
+    /**
      * تحويل الشكل المكتشف إلى كائن [Path] للرسم المباشر على اللوحة.
      */
     fun toPath(shape: QuickShape): Path {

@@ -537,6 +537,33 @@ class CanvasViewModel : ViewModel() {
     }
 
     /**
+     * Put every pixel the current gesture has touched back to how it was when the gesture began,
+     * and return the canvas rectangle that was restored (empty when nothing had been captured).
+     *
+     * The capture is deliberately kept: the gesture goes on painting (a QuickShape replacing the
+     * freehand line it was drawn from) and its later [commitPixelEdit] must still record the
+     * pre-gesture pixels as the before-image, so the whole gesture remains one undo step.
+     */
+    fun restoreCapturedTiles(layerIndex: Int): RectF {
+        val restored = RectF()
+        val layer = _layers.value?.getOrNull(layerIndex) ?: return restored
+        val capture = editCapture?.takeIf { it.layerId == layer.id } ?: return restored
+        val bitmap = editBitmap(layer, capture.target) ?: return restored
+        if (capture.tiles.isEmpty()) return restored
+        val canvas = Canvas(bitmap)
+        capture.tiles.values.forEach { tile ->
+            if (tile.before.isRecycled) return@forEach
+            canvas.drawBitmap(tile.before, tile.left.toFloat(), tile.top.toFloat(), SRC_PAINT)
+            restored.union(
+                tile.left.toFloat(), tile.top.toFloat(),
+                (tile.left + UNDO_TILE_SIZE).toFloat(), (tile.top + UNDO_TILE_SIZE).toFloat()
+            )
+        }
+        restored.intersect(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat())
+        return restored
+    }
+
+    /**
      * Record the pixels a stroke changed. [dirty] is in canvas space and gets clamped and padded
      * to the layer's bounds; only that rectangle is copied.
      */

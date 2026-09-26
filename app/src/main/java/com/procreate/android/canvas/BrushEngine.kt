@@ -957,9 +957,29 @@ class BrushEngine {
     }
 
     /**
+     * The stamp diameter this brush lays at [pressure] and [tilt] when not moving, without random
+     * jitter. The QuickShape preview draws at this width so the preview and the committed shape
+     * carry the same weight.
+     */
+    internal fun previewSize(pressure: Float, tilt: Float = 0f): Float =
+        calculateDynamicSize(pressure, 0f, tilt, includeJitter = false)
+
+    /**
+     * How densely to sample a shape that will be fed through [strokeTo]: half the stamp spacing,
+     * so a curve stays smooth, but never under half a canvas pixel.
+     */
+    internal fun shapeSampleSpacing(pressure: Float, tilt: Float = 0f): Float =
+        max(0.5f, stampSpacing(previewSize(pressure, tilt)) / 2f)
+
+    /**
      * Calculate dynamic brush size based on pressure and velocity.
      */
-    private fun calculateDynamicSize(pressure: Float, velocity: Float, tilt: Float = 0f): Float {
+    private fun calculateDynamicSize(
+        pressure: Float,
+        velocity: Float,
+        tilt: Float = 0f,
+        includeJitter: Boolean = true
+    ): Float {
         var size = properties.size
 
         size *= (1f - properties.pressureSizeScale + properties.pressureSizeScale * pressure)
@@ -975,7 +995,7 @@ class BrushEngine {
         val velocityFactor = (velocity / 2.5f).coerceIn(0f, 1f)
         size *= (1f - (1f - properties.velocitySizeMin) * velocityFactor)
 
-        if (properties.sizeJitter > 0f) {
+        if (includeJitter && properties.sizeJitter > 0f) {
             size *= (1f + (rng.nextFloat() - 0.5f) * properties.sizeJitter)
         }
 
