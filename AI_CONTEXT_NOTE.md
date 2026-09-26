@@ -1,5 +1,17 @@
 # 🧠 Context Note for Antigravity IDE (Agent / AI)
 
+> **⚠️ Superseded (2026-09-26) — read `AGENTS.md` first.** This note is kept for history only.
+> Where it conflicts with `AGENTS.md`, `AGENTS.md` wins. In particular:
+>
+> - Artify is an **original** product. Do **not** extract, copy or derive any texture, icon, brush,
+>   name or file from another app's package (steps 5–6 and the "Assets" item below are withdrawn).
+> - The build has since been completed (see `walkthrough.md`), so "not compiled yet" is out of date.
+> - Current plan and status: `docs/STATUS.md`, `docs/PRODUCT_ROADMAP.md`, `docs/specs/`.
+> - Asset provenance work: `docs/specs/PHASE-0A2-asset-provenance.md`.
+>
+> **تنبيه:** هذه الملاحظة قديمة ومحفوظة للتاريخ فقط. المرجع هو `AGENTS.md`. لا تستخرج أو تنسخ أي
+> خامات أو أيقونات أو فرش من تطبيقات أخرى.
+
 ## 📌 Project Overview (نظرة عامة على المشروع)
 **Goal:** We are building a professional digital painting application for Android, heavily inspired by "Procreate" (iOS). 
 **Original Reference:** We have the original `Procreate_5.3.6.ipa` file in this directory. We previously extracted it to study its structure, UI icons, and brush textures.

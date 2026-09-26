@@ -36,7 +36,7 @@
 - `AI_CONTEXT_NOTE.md` says textures and icons were extracted from that app's IPA.
 - `AGENTS.md` forbids third-party proprietary assets, and `versionCode 14` has already been uploaded
   to Play Internal Test (`app/build.gradle:63-66`).
-- **Required:** a provenance inventory (spec 0A2) that marks each file as original, licensed (with the
+- **Required** (now specified in `docs/specs/PHASE-0A2-asset-provenance.md`, with measured inventory `docs/provenance/asset-inventory.csv`): a provenance inventory that marks each file as original, licensed (with the
   licence recorded) or replace. Until replacements exist, stop any public or Play distribution.
   Remove `AI_CONTEXT_NOTE.md` guidance that tells agents to extract more textures from the IPA.
 - **Repository exposure:** the GitHub repository was made public on 2026-09-26 for this review. It
@@ -56,6 +56,7 @@ mirrored calls also drop tilt and azimuth. `endStroke` flushes only the last mir
 - Fix direction (for a spec, not this review): one `BrushEngine` per symmetry branch (1, 2 or 4),
   each with its own spline state, all started, fed and ended together.
 - This may also explain some "two strokes" reports (see 0D, E8e).
+- Follow-up (added later on 2026-09-26): specified as `docs/specs/PHASE-2B1-symmetry-stroke-isolation.md`.
 
 ### H2 — Panel geometry system is duplicated (S2)
 

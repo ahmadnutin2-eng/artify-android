@@ -45,3 +45,6 @@ artify_ui.xml
 # Runtime files
 *.log
 *.hprof
+
+# Texture Lab output is reproducible from tools/texture_lab/generate_textures.py
+tools/texture_lab/output/

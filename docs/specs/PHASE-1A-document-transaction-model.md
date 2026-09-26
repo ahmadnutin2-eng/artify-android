@@ -35,7 +35,7 @@ Line numbers refer to the base commit.
 | D5 | S2 | The only save trigger is `onPause`. A crash or ANR while drawing loses everything since the last pause. (Covered by 1B; noted here because 1A must provide a snapshot API cheap enough for 1B to call often.) | `CanvasActivity.kt:632-635` |
 | D6 | S3 | Layer files for deleted layers are never removed, so projects grow without bound. | `ProjectDocumentStore.save` |
 | D7 | S3 | There is no free-space check before writing, and a failure only shows a hard-coded Arabic toast. There is no retry and no persistent "unsaved" indicator. | `CanvasActivity.kt:738-747` |
-| D8 | S3 | `Artwork.createdAt` is overwritten with `savedAt` on every save. | `CanvasActivity.kt:722` |
+| D8 | S3 | `Artwork.createdAt` is overwritten with `savedAt` on every save. The gallery sorts by it, so it silently acts as "last modified". | `CanvasActivity.kt:722`, `ArtworkDatabase.kt:29` |
 | D9 | S3 | Room uses `exportSchema = false` and `fallbackToDestructiveMigrationFrom(true, 1)`, so there are no schema snapshots to test migrations against. | `ArtworkDatabase.kt:71,111` |
 
 What is already good and must be kept: per-file `AtomicFile`; path-traversal checks
@@ -61,10 +61,13 @@ single app-scoped save mutex.
    key. It never writes over the damaged project, and the damaged directory is kept for 1C.
 4. **Legacy flattened artworks (fixes D4).** The first open of a legacy artwork converts it into a
    generation-0 project under a new key. The legacy PNG is never rewritten.
-5. **Pre-flight and reporting (fixes D7 and D8).** Before writing, check that free space is at least
+5. **Pre-flight and reporting (fixes D7).** Before writing, check that free space is at least
    2 × the estimated uncompressed size (w × h × 4 × layers), or at least 64 MB. On failure keep the
    document dirty, retry with backoff, and show a persistent in-canvas "not saved" state from
-   string resources in Arabic and English. `createdAt` is set once.
+   string resources in Arabic and English. (D8 is **not** fixed here: the gallery sorts by
+   `createdAt DESC` (`ArtworkDatabase.kt:29`), so `createdAt` is currently acting as a
+   "last modified" key. Fixing it needs a `modifiedAt` column and a Room v5 migration, which 1D
+   delivers together with its migration tests.)
 6. **Storage-layer tests** (see matrix) that run on the JVM without a device wherever possible.
 
 ## Non-goals
