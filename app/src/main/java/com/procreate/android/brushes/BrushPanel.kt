@@ -91,7 +91,6 @@ class BrushPanel : BottomSheetDialogFragment() {
         val panelHeightDp = (screenHeightDp - topMarginDp - bottomMarginDp)
             .coerceAtLeast(1)
             .coerceAtMost((screenHeightDp - topMarginDp).coerceAtLeast(1))
-        PanelUi.expandSheet(bottomDialog, peekDp = panelHeightDp)
         // Configuration dimensions are the current app window in multi-window mode; physical
         // display metrics are not. One production formula also drives the geometry tests.
         val placement = com.procreate.android.ui.common.PanelGeometry.brushPanelPlacement(
@@ -99,6 +98,9 @@ class BrushPanel : BottomSheetDialogFragment() {
             screenHeightDp,
             dockSide == PanelUi.DockSide.RIGHT
         )
+        // Preserve the shared dock contract (expanded/non-draggable behavior, immersive mode and
+        // side animation), then apply the brush panel's stricter floating placement below.
+        PanelUi.dockSheet(bottomDialog, dockSide, widthDp = placement.widthDp)
         window.setLayout(PanelUi.dp(requireContext(), placement.widthDp), PanelUi.dp(requireContext(), panelHeightDp))
         window.setGravity(Gravity.LEFT or Gravity.TOP)
         window.attributes = window.attributes.apply {
@@ -345,11 +347,19 @@ class BrushPanel : BottomSheetDialogFragment() {
 
         updateBrushes()
 
-        lifecycleScope.launch {
+        return shell
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
             repository.all.collect { entities ->
                 val customBrushes = entities.map { it.toBrush() }
-                val customSet = BrushSet("my_brushes", getString(R.string.brush_set_my_brushes), customBrushes)
-                // Put built-in sets first so full catalog is immediately visible
+                val customSet = BrushSet(
+                    "my_brushes",
+                    getString(R.string.brush_set_my_brushes),
+                    customBrushes
+                )
                 brushSets = builtInSets + listOf(customSet)
                 setAdapter.updateSets(brushSets)
                 if (selectedSetIndex >= brushSets.size) selectedSetIndex = 0
@@ -366,8 +376,6 @@ class BrushPanel : BottomSheetDialogFragment() {
                 updateBrushes()
             }
         }
-
-        return shell
     }
 
     /**
@@ -484,12 +492,13 @@ class BrushPanel : BottomSheetDialogFragment() {
     }
 
     private fun updateBrushes() {
+        val activePreviewScope = previewScope ?: return
         bindCover(brushSets.getOrNull(selectedSetIndex))
         val brushes = brushSets.getOrNull(selectedSetIndex)?.brushes ?: emptyList()
         brushesRecyclerView.adapter = BrushAdapter(
             brushes,
             compact = compactLayout,
-            previewScope = checkNotNull(previewScope) { "preview scope is unavailable" },
+            previewScope = activePreviewScope,
             selectedBrushId = viewModel.currentBrushPresetId.value,
             selectedBrush = viewModel.currentBrush.value,
             onClick = { brush ->
