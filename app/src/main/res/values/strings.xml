@@ -119,7 +119,7 @@
     <string name="action_export">Export / Share</string>
     <string name="action_save">Save to Gallery</string>
     <string name="gallery_empty">Your canvas is waiting — choose a workspace above to begin</string>
-    <string name="brush_set_my_brushes">🖼️ My Brushes</string>
+    <string name="brush_set_my_brushes">My Brushes</string>
     <string name="brush_imported_default_name">Imported Brush</string>
     <string name="brush_import_count_success">%1$d brush(es) imported</string>
     <string name="brush_import_zip_empty">No brush shape found inside that file</string>

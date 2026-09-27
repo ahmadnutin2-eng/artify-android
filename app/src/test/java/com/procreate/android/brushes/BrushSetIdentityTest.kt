@@ -2,7 +2,6 @@ package com.procreate.android.brushes
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -27,6 +26,7 @@ class BrushSetIdentityTest {
     @Test
     fun `display names carry no emoji or symbols and keep the words`() {
         sets.forEach { set ->
+            assertFalse("${set.id} stores a pictogram in '${set.name}'", pictogram.containsMatchIn(set.name))
             val shown = BrushSetIdentity.displayName(set)
             assertFalse("${set.id} shows '$shown'", pictogram.containsMatchIn(shown))
             assertTrue("${set.id} lost its name", shown.any(Char::isLetter))
@@ -41,6 +41,12 @@ class BrushSetIdentityTest {
         val brushes = sets.flatMap { it.brushes }
         val first = brushes.first()
         assertEquals(BrushSetIdentity.previewSeed(first), BrushSetIdentity.previewSeed(first.copy()))
-        assertNotEquals(BrushSetIdentity.previewSeed(brushes[0]), BrushSetIdentity.previewSeed(brushes[1]))
+        assertEquals(
+            "renaming must not invalidate a preview golden",
+            BrushSetIdentity.previewSeed(first),
+            BrushSetIdentity.previewSeed(first.copy(name = "Renamed", category = "Moved"))
+        )
+        val seeds = brushes.map(BrushSetIdentity::previewSeed)
+        assertEquals("preview seed collision in the built-in library", seeds.size, seeds.toSet().size)
     }
 }

@@ -8,6 +8,8 @@ package com.procreate.android.ui.common
 object PanelGeometry {
     /** No interactive element closer than this to a screen edge (design rule). */
     const val EDGE_DP = 16
+    const val TOOL_RAIL_GUTTER_DP = 64
+    const val MIN_VISIBLE_CANVAS_FRACTION = 0.40f
 
     data class Placement(val widthDp: Int, val xDp: Int)
 
@@ -35,10 +37,34 @@ object PanelGeometry {
         displayHeightDp: Int,
         dockRight: Boolean
     ): Placement {
-        val width = safeWidthDp(requestedWidthDp, displayWidthDp, displayHeightDp)
-        val maxGutter = (displayWidthDp - width - EDGE_DP).coerceAtLeast(EDGE_DP)
-        val gutter = gutterDp.coerceIn(EDGE_DP, maxGutter)
+        val maximumOccupiedWidth = (displayWidthDp * (1f - MIN_VISIBLE_CANVAS_FRACTION)).toInt()
+        val maximumGutter = (maximumOccupiedWidth - 1).coerceAtLeast(EDGE_DP)
+        val gutter = gutterDp.coerceIn(EDGE_DP, maximumGutter)
+        val canvasCap = (maximumOccupiedWidth - gutter).coerceAtLeast(1)
+        val width = minOf(
+            safeWidthDp(requestedWidthDp, displayWidthDp, displayHeightDp),
+            canvasCap
+        )
         val x = if (dockRight) displayWidthDp - width - gutter else gutter
         return Placement(width, x.coerceAtLeast(EDGE_DP))
+    }
+
+    /** The one production formula used by [BrushPanel] and its geometry tests. */
+    fun brushPanelPlacement(
+        displayWidthDp: Int,
+        displayHeightDp: Int,
+        dockRight: Boolean
+    ): Placement = floatingPlacement(
+        requestedWidthDp = (displayWidthDp * 0.355f).toInt().coerceIn(330, 620),
+        gutterDp = (displayWidthDp * 0.055f).toInt().coerceIn(TOOL_RAIL_GUTTER_DP, 94),
+        displayWidthDp = displayWidthDp,
+        displayHeightDp = displayHeightDp,
+        dockRight = dockRight
+    )
+
+    /** Keeps a usable preview column even when split-screen forces the whole palette very narrow. */
+    fun brushCategoryRailWidthDp(panelWidthDp: Int): Int {
+        val maximumRailWidth = (panelWidthDp - 72).coerceAtLeast(52)
+        return (panelWidthDp * 0.37f).toInt().coerceIn(52, maximumRailWidth)
     }
 }

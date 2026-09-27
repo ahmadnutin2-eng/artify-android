@@ -3,6 +3,7 @@ package com.procreate.android.brushes
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,7 +36,12 @@ import com.procreate.android.database.CustomBrushEntity
 import com.procreate.android.database.CustomBrushRepository
 import com.procreate.android.ui.common.PanelGlass
 import com.procreate.android.ui.common.PanelUi
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -65,6 +71,7 @@ class BrushPanel : BottomSheetDialogFragment() {
     private var brushSets: List<BrushSet> = builtInSets
     private var selectedSetIndex = 0
     private var compactLayout = false
+    private var previewScope: CoroutineScope? = null
 
     private val importLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { handleImport(it) }
@@ -74,31 +81,23 @@ class BrushPanel : BottomSheetDialogFragment() {
         super.onStart()
         val screenWidthDp = resources.configuration.screenWidthDp
         val screenHeightDp = resources.configuration.screenHeightDp
-        val paletteWidth = (screenWidthDp * 0.355f).toInt().coerceIn(330, 620)
         val dockSide = PanelUi.dockSide(arguments, PanelUi.DockSide.RIGHT)
-        PanelUi.dockSheet(
-            dialog,
-            dockSide,
-            widthDp = paletteWidth
-        )
         val bottomDialog = dialog as? BottomSheetDialog ?: return
         bottomDialog.setCanceledOnTouchOutside(true)
         isCancelable = true
         val window = bottomDialog.window ?: return
         val topMarginDp = (screenHeightDp * 0.072f).toInt().coerceIn(36, 76)
-        val bottomMarginDp = (screenHeightDp * 0.015f).toInt().coerceIn(6, 16)
+        val bottomMarginDp = (screenHeightDp * 0.015f).toInt().coerceIn(16, 24)
         val panelHeightDp = (screenHeightDp - topMarginDp - bottomMarginDp)
-            .coerceAtLeast(320)
+            .coerceAtLeast(1)
             .coerceAtMost((screenHeightDp - topMarginDp).coerceAtLeast(1))
-        // One geometry for width and position, measured on the same display dockSheet uses, so
-        // the panel can never be placed off screen or against an edge (review finding H2).
-        val display = resources.displayMetrics
-        val placement = com.procreate.android.ui.common.PanelGeometry.floatingPlacement(
-            requestedWidthDp = paletteWidth,
-            gutterDp = (screenWidthDp * 0.055f).toInt().coerceIn(64, 94),
-            displayWidthDp = (display.widthPixels / display.density).toInt(),
-            displayHeightDp = (display.heightPixels / display.density).toInt(),
-            dockRight = dockSide == PanelUi.DockSide.RIGHT
+        PanelUi.expandSheet(bottomDialog, peekDp = panelHeightDp)
+        // Configuration dimensions are the current app window in multi-window mode; physical
+        // display metrics are not. One production formula also drives the geometry tests.
+        val placement = com.procreate.android.ui.common.PanelGeometry.brushPanelPlacement(
+            screenWidthDp,
+            screenHeightDp,
+            dockSide == PanelUi.DockSide.RIGHT
         )
         window.setLayout(PanelUi.dp(requireContext(), placement.widthDp), PanelUi.dp(requireContext(), panelHeightDp))
         window.setGravity(Gravity.LEFT or Gravity.TOP)
@@ -125,14 +124,22 @@ class BrushPanel : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         val context = requireContext()
+        previewScope?.cancel()
+        previewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
         com.procreate.android.canvas.BrushTextures.appContext = context.applicationContext
         fun dp(v: Int) = PanelUi.dp(context, v)
         val compact = resources.configuration.screenWidthDp < 760 ||
             resources.configuration.screenHeightDp < 520
-        val referencePanelWidthDp = (resources.configuration.screenWidthDp * 0.355f)
-            .toInt()
-            .coerceIn(330, 620)
-        val categoryRailWidthDp = (referencePanelWidthDp * 0.37f).toInt()
+        val dockRight = PanelUi.dockSide(arguments, PanelUi.DockSide.RIGHT) == PanelUi.DockSide.RIGHT
+        val actualPanelWidthDp = com.procreate.android.ui.common.PanelGeometry.brushPanelPlacement(
+            resources.configuration.screenWidthDp,
+            resources.configuration.screenHeightDp,
+            dockRight
+        ).widthDp
+        // Derive the rail from the width the window will really receive. Using the old 330dp
+        // minimum here left only ~30dp for previews in a 360dp split-screen window.
+        val categoryRailWidthDp = com.procreate.android.ui.common.PanelGeometry
+            .brushCategoryRailWidthDp(actualPanelWidthDp)
         compactLayout = compact
         repository = CustomBrushRepository(ArtworkDatabase.getDatabase(context).customBrushDao())
         val activePresetId = viewModel.currentBrushPresetId.value
@@ -374,6 +381,14 @@ class BrushPanel : BottomSheetDialogFragment() {
         PanelGlass.install(host, backdrop, backdrop, Color.TRANSPARENT)
     }
 
+    override fun onDestroyView() {
+        if (::brushesRecyclerView.isInitialized) brushesRecyclerView.adapter = null
+        previewScope?.cancel()
+        previewScope = null
+        glassBackdrop = null
+        super.onDestroyView()
+    }
+
     /** Routes an imported file to the right path: a .brush/.brushset is a ZIP archive (see
      * BrushsetImporter), anything else is treated as a plain shape image. */
     private fun handleImport(uri: Uri) {
@@ -474,6 +489,7 @@ class BrushPanel : BottomSheetDialogFragment() {
         brushesRecyclerView.adapter = BrushAdapter(
             brushes,
             compact = compactLayout,
+            previewScope = checkNotNull(previewScope) { "preview scope is unavailable" },
             selectedBrushId = viewModel.currentBrushPresetId.value,
             selectedBrush = viewModel.currentBrush.value,
             onClick = { brush ->
@@ -610,6 +626,7 @@ class BrushSetAdapter(
 class BrushAdapter(
     private val brushes: List<Brush>,
     private val compact: Boolean,
+    private val previewScope: CoroutineScope,
     private var selectedBrushId: String?,
     private var selectedBrush: BrushProperties?,
     private val onClick: (Brush) -> Unit,
@@ -621,7 +638,11 @@ class BrushAdapter(
         val nameView: TextView,
         val factsView: TextView,
         val strokeImage: ImageView
-    ) : RecyclerView.ViewHolder(root)
+    ) : RecyclerView.ViewHolder(root) {
+        var previewJob: Job? = null
+    }
+
+    private val activePreviewJobs = mutableSetOf<Job>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
@@ -685,6 +706,7 @@ class BrushAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.previewJob?.cancel()
         val brush = brushes[position]
         holder.nameView.text = brush.name
         val selected = brush.id == selectedBrushId ||
@@ -708,7 +730,7 @@ class BrushAdapter(
         // far wider than the space it landed in, so FIT_CENTER shrank it to fit the width and left
         // the stroke occupying a fraction of the available height - every brush in the library read
         // as the same thin hairline no matter how broad its tip really was.
-        bindPreview(holder.strokeImage, brush)
+        bindPreview(holder, brush)
         holder.root.contentDescription = brush.name
 
         holder.root.setOnClickListener { onClick(brush) }
@@ -720,19 +742,20 @@ class BrushAdapter(
      * has not been measured yet. The tag guards against a recycled row receiving the bitmap a
      * previous brush asked for.
      */
-    private fun bindPreview(image: ImageView, brush: Brush) {
+    private fun bindPreview(holder: ViewHolder, brush: Brush) {
+        val image = holder.strokeImage
         image.tag = brush.id
         val width = image.width
         val height = image.height
         if (width > 0 && height > 0) {
-            showPreview(image, brush, width, height)
+            showPreview(holder, brush, width, height)
             return
         }
         image.post {
             if (image.tag != brush.id) return@post
             val w = image.width
             val h = image.height
-            if (w > 0 && h > 0) showPreview(image, brush, w, h)
+            if (w > 0 && h > 0) showPreview(holder, brush, w, h)
         }
     }
 
@@ -740,16 +763,50 @@ class BrushAdapter(
      * A cached swatch is shown at once. Otherwise the row stays empty for the few milliseconds the
      * preview thread needs, rather than the UI thread rendering it mid-fling.
      */
-    private fun showPreview(image: ImageView, brush: Brush, width: Int, height: Int) {
+    private fun showPreview(holder: ViewHolder, brush: Brush, width: Int, height: Int) {
+        val image = holder.strokeImage
         BrushPreviewRenderer.cachedPreview(brush, width, height)?.let {
+            image.alpha = 1f
             image.setImageBitmap(it)
             return
         }
-        image.setImageDrawable(null)
-        BrushPreviewRenderer.renderPreviewAsync(
-            brush, width, height,
-            stillWanted = { image.tag == brush.id }
-        ) { bitmap -> if (image.tag == brush.id) image.setImageBitmap(bitmap) }
+        image.alpha = 1f
+        image.setImageDrawable(ColorDrawable(Color.argb(34, 255, 255, 255)))
+        val job = previewScope.launch {
+            try {
+                val bitmap = withContext(Dispatchers.Default) {
+                    BrushPreviewRenderer.getPreview(brush, width, height)
+                }
+                if (image.tag == brush.id) {
+                    image.alpha = 0.15f
+                    image.setImageBitmap(bitmap)
+                    image.animate().alpha(1f).setDuration(100L).start()
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (oom: OutOfMemoryError) {
+                android.util.Log.e("BrushAdapter", "Preview allocation failed for ${brush.id}", oom)
+                BrushPreviewRenderer.trimCache()
+            } catch (error: Exception) {
+                android.util.Log.e("BrushAdapter", "Preview render failed for ${brush.id}", error)
+            }
+        }
+        activePreviewJobs += job
+        job.invokeOnCompletion { activePreviewJobs -= job }
+        holder.previewJob = job
+    }
+
+    override fun onViewRecycled(holder: ViewHolder) {
+        holder.previewJob?.cancel()
+        holder.previewJob = null
+        holder.strokeImage.tag = null
+        super.onViewRecycled(holder)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        activePreviewJobs.toList().forEach(Job::cancel)
+        activePreviewJobs.clear()
+        super.onDetachedFromRecyclerView(recyclerView)
     }
 
     override fun getItemCount() = brushes.size

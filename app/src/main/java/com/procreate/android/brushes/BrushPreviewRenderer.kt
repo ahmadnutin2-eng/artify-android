@@ -56,31 +56,6 @@ object BrushPreviewRenderer {
     fun cachedPreview(brush: Brush, widthPx: Int, heightPx: Int): Bitmap? =
         synchronized(strokeCache) { strokeCache[previewKey(brush, widthPx, heightPx)] }
 
-    /**
-     * One background thread renders swatches in request order, so a cold panel or a fling never
-     * runs ~90 textured stamps per row on the UI thread. [stillWanted] is checked just before the
-     * work starts, which skips rows that were recycled while waiting; [onReady] runs on the main
-     * thread.
-     */
-    private val previewExecutor = java.util.concurrent.Executors.newSingleThreadExecutor { runnable ->
-        Thread(runnable, "brush-previews").apply { isDaemon = true }
-    }
-    private val mainHandler by lazy { android.os.Handler(android.os.Looper.getMainLooper()) }
-
-    fun renderPreviewAsync(
-        brush: Brush,
-        widthPx: Int,
-        heightPx: Int,
-        stillWanted: () -> Boolean,
-        onReady: (Bitmap) -> Unit
-    ) {
-        previewExecutor.execute {
-            if (!stillWanted()) return@execute
-            val bitmap = runCatching { getPreview(brush, widthPx, heightPx) }.getOrNull() ?: return@execute
-            mainHandler.post { onReady(bitmap) }
-        }
-    }
-
     fun getTipIcon(brush: Brush, sizePx: Int): Bitmap =
         cached(iconCache, "${brush.id}_${brush.properties.hashCode()}_icon_$sizePx") { renderTipIcon(brush, sizePx) }
 
@@ -136,6 +111,12 @@ object BrushPreviewRenderer {
             iconCache.values.forEach { it.recycle() }
             iconCache.clear()
         }
+    }
+
+    /** Release cached references after a preview allocation failure without recycling displayed rows. */
+    fun trimCache() {
+        synchronized(strokeCache) { strokeCache.clear() }
+        synchronized(iconCache) { iconCache.clear() }
     }
 
     private fun renderStrokePreview(

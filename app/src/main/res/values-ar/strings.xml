@@ -51,7 +51,7 @@
     <string name="action_export">تصدير / مشاركة</string>
     <string name="action_save">حفظ في المعرض</string>
     <string name="gallery_empty">مساحتك بانتظارك — اختر نوع المشروع من الأعلى وابدأ</string>
-    <string name="brush_set_my_brushes">🖼️ فرشي</string>
+    <string name="brush_set_my_brushes">فرشي</string>
     <string name="brush_imported_default_name">فرشاة مستوردة</string>
     <string name="brush_import_count_success">تم استيراد %1$d فرشاة</string>
     <string name="brush_import_zip_empty">لم يتم العثور على شكل فرشاة داخل هذا الملف</string>

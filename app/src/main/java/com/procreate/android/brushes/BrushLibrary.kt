@@ -140,8 +140,7 @@ object BrushSetIdentity {
      */
     fun previewSeed(brush: Brush): Long {
         var hash = -0x340d631b7bdddcdbL // 64-bit FNV offset basis as a signed Long.
-        val identity = "${brush.id}\u0000${brush.category}\u0000${brush.name}"
-        identity.forEach { char ->
+        brush.id.forEach { char ->
             hash = hash xor char.code.toLong()
             hash *= 0x100000001b3L
         }
@@ -207,7 +206,7 @@ object BrushLibrary {
      * of pressure, velocity, grain, wet mixing and stamp dynamics.
      */
     private fun createArtifyOriginalsSet(): BrushSet = BrushSet(
-        "artify_originals", "✦ فرش Artify الأصلية", listOf(
+        "artify_originals", "فرش Artify الأصلية", listOf(
             Brush("artify_pulse_ink", "نبض الحبر", "Artify Originals", BrushProperties(
                 type = BrushType.Ink, size = 18f, opacity = 1f, flow = 0.94f,
                 spacing = 0.012f, smoothing = 0.58f, velocitySizeMin = 0.58f,
@@ -298,7 +297,7 @@ object BrushLibrary {
      * and a long wash travels - which is how a loaded brush actually behaves.
      */
     private fun createColorFlowSet(): BrushSet = BrushSet(
-        "color_flow", "🌊 تدرّج اللون",
+        "color_flow", "تدرّج اللون",
         accentColor = 0xFF5B5BD6.toInt(),
         tagline = "فرش تتحرّك ألوانها أثناء الضربة الواحدة",
         brushes = listOf(
@@ -338,7 +337,7 @@ object BrushLibrary {
     )
 
     private fun createSquareKuficSet(): BrushSet = BrushSet(
-        "square_kufic", "▦ كوفي تربيعي",
+        "square_kufic", "كوفي تربيعي",
         accentColor = 0xFF2FBF71.toInt(),
         tagline = "خط بنائي — يُركَّب داخل الشبكة لا يُكتب على سطر",
         brushes = listOf(
@@ -376,7 +375,7 @@ object BrushLibrary {
     )
 
     private fun createArabicCalligraphySet(): BrushSet = BrushSet(
-        "arabic_calligraphy", "🖋️ الخط العربي",
+        "arabic_calligraphy", "الخط العربي",
         accentColor = 0xFF2FBF71.toInt(),
         tagline = "قصبة مقطوعة الطرف — ثلث ونسخ ورقعة وديواني",
         brushes = listOf(
@@ -542,7 +541,7 @@ object BrushLibrary {
     )
 
     private fun createFeaturedSet(): BrushSet = BrushSet(
-        "featured_signature", "⭐️ مختارات", listOf(
+        "featured_signature", "مختارات", listOf(
             Brush("proc_6b_pencil_feat", "6B Pencil", "Featured", BrushProperties(
                 type = BrushType.Pencil, size = 22f, opacity = 0.95f, spacing = 0.04f,
                 tipType = BrushTipType.CUSTOM,
@@ -694,7 +693,7 @@ object BrushLibrary {
     )
 
     private fun createSketchingSet(): BrushSet = BrushSet(
-        "sketching", "✏️ الرسم الأولي", listOf(
+        "sketching", "الرسم الأولي", listOf(
             Brush("proc_peppermint", "Mint Leaf", "Sketching", BrushProperties(
                 type = BrushType.Pencil, size = 16f, opacity = 0.90f, spacing = 0.030f,
                 smoothing = 0.15f, grainScale = 0.75f, pressureSizeScale = 0.45f, pressureOpacityScale = 0.55f, 
@@ -779,7 +778,7 @@ object BrushLibrary {
     )
 
     private fun createInkingSet(): BrushSet = BrushSet(
-        "inking", "✒️ التحبير", listOf(
+        "inking", "التحبير", listOf(
             Brush("proc_mercury", "Liquid Metal", "Inking", BrushProperties(
                 type = BrushType.Ink, size = 18f, opacity = 1f, spacing = 0.015f,
                 smoothing = 0.50f, grainScale = 0f, pressureSizeScale = 0.70f, pressureOpacityScale = 0.05f, 
@@ -903,7 +902,7 @@ object BrushLibrary {
     )
 
     private fun createDrawingSet(): BrushSet = BrushSet(
-        "drawing", "🎨 الرسم", listOf(
+        "drawing", "الرسم", listOf(
             Brush("proc_little_pine", "Pine Needle", "Drawing", BrushProperties(
                 type = BrushType.Paint, size = 24f, opacity = 0.88f, spacing = 0.035f,
                 smoothing = 0.20f, grainScale = 0.70f, pressureSizeScale = 0.55f, pressureOpacityScale = 0.45f, 
@@ -987,7 +986,7 @@ object BrushLibrary {
     )
 
     private fun createPaintingSet(): BrushSet = BrushSet(
-        "painting", "🖌️ التلوين", listOf(
+        "painting", "التلوين", listOf(
             Brush("proc_round_brush", "Round Brush", "Painting", BrushProperties(
                 type = BrushType.Paint, size = 36f, opacity = 0.88f, spacing = 0.035f,
                 smoothing = 0.30f, wetness = 0.55f, grainScale = 0.70f, pressureSizeScale = 0.65f, pressureOpacityScale = 0.35f, 
@@ -1128,7 +1127,7 @@ object BrushLibrary {
     )
 
     private fun createArtisticSet(): BrushSet = BrushSet(
-        "artistic", "🎭 فنية", listOf(
+        "artistic", "فنية", listOf(
             Brush("proc_wild_light", "Flare Burst", "Artistic", BrushProperties(
                 type = BrushType.Paint, size = 38f, opacity = 0.85f, spacing = 0.040f,
                 smoothing = 0.25f, wetness = 0.45f, grainScale = 0.80f, scatter = 0.08f, angleJitter = 15f, pressureSizeScale = 0.70f, pressureOpacityScale = 0.40f, 
@@ -1213,7 +1212,7 @@ object BrushLibrary {
     )
 
     private fun createCalligraphySet(): BrushSet = BrushSet(
-        "calligraphy", "🔤 الخطوط", listOf(
+        "calligraphy", "الخطوط", listOf(
             Brush("br_summit_grain", "Summit Grain", "Calligraphy", BrushProperties(
                 type = BrushType.Ink, size = 22f, opacity = 1f, spacing = 0.015f,
                 smoothing = 0.55f, grainScale = 0f, pressureSizeScale = 0.80f, pressureOpacityScale = 0.05f, 
@@ -1297,7 +1296,7 @@ object BrushLibrary {
     )
 
     private fun createAirbrushingSet(): BrushSet = BrushSet(
-        "airbrushing", "💨 البخاخ", listOf(
+        "airbrushing", "البخاخ", listOf(
             Brush("proc_soft_brush", "Soft Brush", "Airbrushing", BrushProperties(
                 type = BrushType.Airbrush, size = 50f, opacity = 0.65f, spacing = 0.020f,
                 smoothing = 0.35f, grainScale = 0f, pressureSizeScale = 0.30f, pressureOpacityScale = 0.75f, 
@@ -1398,7 +1397,7 @@ object BrushLibrary {
     )
 
     private fun createTexturesSet(): BrushSet = BrushSet(
-        "textures", "🧱 الخامات", listOf(
+        "textures", "الخامات", listOf(
             Brush("proc_tessellated", "Tessellated", "Textures", BrushProperties(
                 type = BrushType.Paint, size = 55f, opacity = 0.85f, spacing = 0.050f,
                 smoothing = 0.25f, grainScale = 0.95f, angleJitter = 25f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -1522,7 +1521,7 @@ object BrushLibrary {
     )
 
     private fun createAbstractSet(): BrushSet = BrushSet(
-        "abstract", "🌀 تجريدية", listOf(
+        "abstract", "تجريدية", listOf(
             Brush("proc_stickman", "Figure", "Abstract", BrushProperties(
                 type = BrushType.Paint, size = 30f, opacity = 0.90f, spacing = 0.035f,
                 smoothing = 0.25f, grainScale = 0.75f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -1606,7 +1605,7 @@ object BrushLibrary {
     )
 
     private fun createCharcoalsSet(): BrushSet = BrushSet(
-        "charcoals", "🪵 الفحم", listOf(
+        "charcoals", "الفحم", listOf(
             Brush("proc_2b_compressed", "2B Compressed", "Charcoals", BrushProperties(
                 type = BrushType.Pencil, size = 34f, opacity = 0.90f, spacing = 0.045f,
                 smoothing = 0.10f, grainScale = 0.90f, angleJitter = 20f, pressureSizeScale = 0.65f, pressureOpacityScale = 0.65f, 
@@ -1675,7 +1674,7 @@ object BrushLibrary {
     )
 
     private fun createElementsSet(): BrushSet = BrushSet(
-        "elements", "🌊 العناصر", listOf(
+        "elements", "العناصر", listOf(
             Brush("proc_smoke", "Smoke", "Elements", BrushProperties(
                 type = BrushType.Paint, size = 65f, opacity = 0.50f, spacing = 0.050f,
                 smoothing = 0.20f, grainScale = 0.75f, scatter = 0.35f, angleJitter = 180f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.60f, 
@@ -1744,7 +1743,7 @@ object BrushLibrary {
     )
 
     private fun createSpraypaintsSet(): BrushSet = BrushSet(
-        "spraypaints", "🥫 الرذاذ", listOf(
+        "spraypaints", "الرذاذ", listOf(
             Brush("proc_ultrafine_nozzle", "Ultrafine Nozzle", "Spraypaints", BrushProperties(
                 type = BrushType.Paint, size = 36f, opacity = 0.88f, spacing = 0.035f,
                 smoothing = 0.30f, wetness = 0.55f, grainScale = 0.70f, pressureSizeScale = 0.65f, pressureOpacityScale = 0.35f, 
@@ -1813,7 +1812,7 @@ object BrushLibrary {
     )
 
     private fun createTouchupsSet(): BrushSet = BrushSet(
-        "touchups", "✨ الرتوش", listOf(
+        "touchups", "الرتوش", listOf(
             Brush("br_soft_wash", "Soft Wash", "Touchups", BrushProperties(
                 type = BrushType.Paint, size = 30f, opacity = 0.90f, spacing = 0.035f,
                 smoothing = 0.25f, grainScale = 0.75f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -1953,7 +1952,7 @@ object BrushLibrary {
     )
 
     private fun createRetroSet(): BrushSet = BrushSet(
-        "retro", "📻 كلاسيكية", listOf(
+        "retro", "كلاسيكية", listOf(
             Brush("proc_myrtle", "Leaf Grain", "Retro", BrushProperties(
                 type = BrushType.Paint, size = 30f, opacity = 0.90f, spacing = 0.035f,
                 smoothing = 0.25f, grainScale = 0.75f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -2061,7 +2060,7 @@ object BrushLibrary {
     )
 
     private fun createLuminanceSet(): BrushSet = BrushSet(
-        "luminance", "💡 الإضاءة", listOf(
+        "luminance", "الإضاءة", listOf(
             Brush("proc_flare", "Flare", "Luminance", BrushProperties(
                 type = BrushType.Paint, size = 32f, opacity = 0.95f, spacing = 0.020f,
                 smoothing = 0.40f, grainScale = 0.20f, pressureSizeScale = 0.70f, pressureOpacityScale = 0.40f, 
@@ -2130,7 +2129,7 @@ object BrushLibrary {
     )
 
     private fun createIndustrialSet(): BrushSet = BrushSet(
-        "industrial", "⚙️ صناعية", listOf(
+        "industrial", "صناعية", listOf(
             Brush("proc_caged", "Cage Grid", "Industrial", BrushProperties(
                 type = BrushType.Paint, size = 30f, opacity = 0.90f, spacing = 0.035f,
                 smoothing = 0.25f, grainScale = 0.75f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -2199,7 +2198,7 @@ object BrushLibrary {
     )
 
     private fun createOrganicSet(): BrushSet = BrushSet(
-        "organic", "🌿 عضوية", listOf(
+        "organic", "عضوية", listOf(
             Brush("proc_spires", "Ridge Line", "Organic", BrushProperties(
                 type = BrushType.Paint, size = 38f, opacity = 0.85f, spacing = 0.040f,
                 smoothing = 0.25f, grainScale = 0.80f, scatter = 0.15f, angleJitter = 30f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -2322,7 +2321,7 @@ object BrushLibrary {
     )
 
     private fun createWaterSet(): BrushSet = BrushSet(
-        "water", "💧 مائية", listOf(
+        "water", "مائية", listOf(
             Brush("proc_water_bleed", "Water Bleed", "Water", BrushProperties(
                 type = BrushType.Paint, size = 45f, opacity = 0.65f, spacing = 0.040f,
                 smoothing = 0.35f, wetness = 0.75f, grainScale = 0.70f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -2386,7 +2385,7 @@ object BrushLibrary {
     )
 
     private fun createEarthSet(): BrushSet = BrushSet(
-        "earth", "🌍 أرضية", listOf(
+        "earth", "أرضية", listOf(
             Brush("proc_wheatgrass", "Wheat Blade", "Earth", BrushProperties(
                 type = BrushType.Paint, size = 30f, opacity = 0.90f, spacing = 0.035f,
                 smoothing = 0.25f, grainScale = 0.75f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
@@ -2447,7 +2446,7 @@ object BrushLibrary {
     )
 
     private fun createSpecialBrushesSet(): BrushSet = BrushSet(
-        "special_brushes", "🌟 فرش خاصة", listOf(
+        "special_brushes", "فرش خاصة", listOf(
             Brush("br_chalk_stick_2", "Chalk Stick", "Special Brushes", BrushProperties(
                 type = BrushType.Paint, size = 30f, opacity = 0.90f, spacing = 0.035f,
                 smoothing = 0.25f, grainScale = 0.75f, pressureSizeScale = 0.60f, pressureOpacityScale = 0.40f, 
