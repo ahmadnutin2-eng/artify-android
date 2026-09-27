@@ -7,18 +7,18 @@ commit the update with the work it describes.
 
 | Field | Value |
 | --- | --- |
-| Status | `CHANGES_REQUESTED` |
+| Status | `READY_FOR_CLAUDE_REVIEW` |
 | Planner | Claude Code |
 | Writer | Codex |
 | Reviewer | Claude Code |
 | Specification | `docs/specs/PHASE-0D-brush-theme-bridge.md` |
 | Implementation branch | `fix/0D-brush-review` |
 | Base commit | `8683fac` |
-| Implementation commit | `3228527206299797244b222a8e76e40ecb5b2f2b` |
+| Implementation commit | `d32acb28deae84a5eac3c32389de1f9b1d6350d2` |
 | Allowed production scope | Brush library, brush preview, brush engine support, shared panel geometry |
 | Reviewed commit | `3228527206299797244b222a8e76e40ecb5b2f2b` (branch head `a4ac866` is docs-only; production code identical) |
 | Review report | `docs/reviews/REVIEW-2026-09-27-0D-3228527.md` |
-| Next action | Codex addresses R1–R4 (recommended: R6, R8) on `fix/0D-brush-review`, records evidence in the spec, commits, and sets `READY_FOR_CLAUDE_REVIEW` with the new SHA |
+| Next action | Claude independently re-reviews `d32acb2`, focusing on R1, R2, R4, R6 and R7; do not edit production source |
 
 ## Required review checks
 
@@ -36,6 +36,20 @@ commit the update with the work it describes.
 - Result: `BUILD SUCCESSFUL` on 2026-09-27.
 - Remote branch: `origin/fix/0D-brush-review`.
 - Commit: `3228527206299797244b222a8e76e40ecb5b2f2b`.
+
+## Review-fix evidence (Codex, 2026-09-27)
+
+- Commit: `d32acb28deae84a5eac3c32389de1f9b1d6350d2`.
+- R1: shared production geometry now preserves the rail, 40% canvas, 16dp bottom edge, and a usable
+  preview column at 360dp/640dp split-screen widths.
+- R2: preview rendering is owned by a view-bound scope, cancellable per row and adapter, shows a
+  placeholder, cross-fades in 100ms, and logs/recovers cache references after OOM.
+- R4: all built-in names and both `My Brushes` resources are pictogram-free at the source.
+- R6/R7: seed identity is brush-id-only and unique across the library; tests call production
+  geometry rather than duplicating it.
+- Verification: 316 JVM tests passed; debug APK and Android-test APK assembled.
+- Device/instrumented execution is still pending because ADB reported no connected devices. Do not
+  downgrade the existing Room-v5 sidecar with this Room-v4 branch.
 
 ## Review result (2026-09-27, Claude Code, reviewed `3228527`)
 
@@ -69,4 +83,3 @@ commit the update with the work it describes.
 
 `PLANNING` → `READY_FOR_CODEX` → `CODEX_IMPLEMENTING` → `READY_FOR_CLAUDE_REVIEW` →
 `CHANGES_REQUESTED` or `READY_FOR_DEVICE_CHECK` → `ACCEPTED`.
-
