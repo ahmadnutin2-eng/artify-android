@@ -2,12 +2,12 @@
 
 ## Specification metadata
 
-- Status: Implemented increment; independent re-review and device evidence pending.
+- Status: Implemented increment; independent re-review complete, final visual/device gate pending.
 - Planner owner: Claude, standing in as Planner while the Codex Cloud quota is unavailable
 - Executor owner: Local Codex / Antigravity agent on the Windows workstation
 - Reviewer owner: Independent review (Codex Cloud or Claude, whichever did not implement)
 - Base commit SHA: `5941ab1c48a384ed2d3ff073e538398da56fa98f`
-- Implementation head SHA: `d32acb28deae84a5eac3c32389de1f9b1d6350d2`
+- Implementation head SHA: `6dd21b5d880ae9fd5544d048d3b36d0ef7786545`
 - Dependencies: **0A asset-provenance gate (new, blocking; see below)**, Plan 0 screenshot protocol,
   design tokens
 - Affected source areas: `brushes/BrushPanel.kt`, `brushes/BrushPreviewRenderer.kt`,
@@ -158,8 +158,9 @@ names change, ids don't). Revert as one feature branch.
 
 ## Implementation evidence
 
-- Branch: `fix/0D-brush-review`; base `8683fac`; first implementation `3228527`; review-fix head
-  `d32acb28deae84a5eac3c32389de1f9b1d6350d2`.
+- Branch: `fix/0D-brush-review`; base `8683fac`; first implementation `3228527`; review-fix heads
+  `d32acb28deae84a5eac3c32389de1f9b1d6350d2` and
+  `6dd21b5d880ae9fd5544d048d3b36d0ef7786545`.
 - Automated command:
   `gradlew.bat :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest -Partify.sidecar=true`.
 - Result on 2026-09-27: `BUILD SUCCESSFUL`; 316 JVM tests, 0 failures/errors/skips; debug app and
@@ -174,17 +175,22 @@ names change, ids don't). Revert as one feature branch.
 - Review R4/R6/R7: built-in/source names and both `My Brushes` resources are pictogram-free; preview
   seed uses only the stable brush id and is collision-tested across the full library; geometry tests
   call production formulas.
-- Instrumented test APK compiles, but tests were not executed because no ADB device was connected.
-- Screenshots and real split-screen RTL/LTR verification remain open. The previously identified
-  tablet has a newer Room schema; do not downgrade-install this branch over its sidecar data. Use an
-  integration build containing phases 1B/1C/1D or a disposable clean sidecar target.
+- Claude's narrow re-review found N1/N4. `6dd21b5` restores `PanelUi.dockSheet` behavior and binds
+  repository collection plus preview rendering to the panel view lifecycle.
+- Physical-device run on `R5CTA0M9KRK` (Samsung SM-S908E, Android 16) executed
+  `BrushPreviewDeterminismInstrumentedTest`: 2 tests, 0 failures. Preflight found the sidecar at Room
+  schema 3, so the additive 3→4 migration was safe. The production `artify.com` package was untouched.
+- The Arabic landscape gallery and sidecar launch were captured. Brush-panel screenshots and real
+  split-screen RTL/LTR geometry remain open because the device returned to Gallery during capture;
+  this is not claimed as visual acceptance. AC7 frame evidence also remains open.
 - AC4 dedicated category-icon family, AC6 reproduced single-component evidence, AC7 frame metrics,
   AC9 brand assets, and the separate 0A2 provenance gate remain open and are not claimed complete.
 
 ## Review outcome
 
-Claude Code reviewed `3228527` in `docs/reviews/REVIEW-2026-09-27-0D-3228527.md` and requested
-changes. The corrections are in `d32acb2`; independent re-review is pending.
+Claude Code reviewed `3228527`, then re-reviewed `d32acb2` in
+`docs/reviews/REVIEW-2026-09-27-0D-d32acb2.md`. Its two remaining narrow findings N1/N4 are fixed in
+`6dd21b5`. The phase is `READY_FOR_DEVICE_CHECK`, not yet `ACCEPTED`.
 
 ## Product-owner sign-off and rollback
 

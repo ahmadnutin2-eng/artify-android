@@ -11,23 +11,29 @@ Artify must retain its own name, assets, icons, brush names, and visual identity
 
 Every task prompt must name exactly one role.
 
-### Planner (Claude Code by default)
+### Heavy-work agent (Claude Code by default)
 
-- Inspect the repository and the current roadmap before planning.
-- Produce or update a scoped specification under `docs/specs/`.
-- Define user value, dependencies, non-goals, risks, measurable acceptance criteria, and tests.
-- Do not modify production source code in a planning task.
-- Split work so one implementation task can be completed and verified independently.
+- Own repository-wide inspection, long planning passes, dependency/security/provenance audits,
+  backend and protocol analysis, large test matrices, documentation, repetitive mechanical work,
+  and independent code review.
+- Run expensive or long-lived analysis and verification when it does not require physical-device
+  judgment or ownership of the product's visual quality.
+- Produce bounded specifications under `docs/specs/` before handing implementation to Codex.
+- May implement isolated non-visual infrastructure only when the handoff names Claude as Writer and
+  its paths do not overlap an active Codex visual/rendering task.
 
-### Executor (local Codex)
+### Product-quality agent (local Codex by default)
 
-- Implement one approved specification at a time.
-- Preserve unrelated user changes and avoid broad rewrites.
-- Build, run automated tests, install the sidecar APK, and verify visually on the connected Android
-  device when UI, drawing, stylus, performance, or lifecycle behavior changes.
-- Record evidence and remaining risks in the matching specification before handoff.
+- Own visible product quality: UI/UX, responsive phone/tablet proportions, design tokens, icons,
+  typography, motion, panels, brush previews, drawing feel, rendering, stylus behavior, and device
+  screenshots.
+- Own deep implementation where continuity and careful code reasoning matter, especially drawing,
+  lifecycle, persistence safety, performance-sensitive paths, and final integration.
+- Use Claude's plan/review as evidence, not as automatic approval; inspect the actual code and retain
+  the final quality gate for anything the user sees or touches.
+- Build, test, install only the sidecar package, and verify on real Android devices when relevant.
 
-### Reviewer (Claude Code or a separate independent thread)
+### Reviewer (Claude Code by default; Codex owns final product sign-off)
 
 - Review the diff against the specification and acceptance criteria.
 - Prioritize data loss, rendering regressions, lifecycle bugs, security, accessibility, and
@@ -40,8 +46,12 @@ device check.
 ## Claude Code ↔ Codex coordination
 
 - Both assistants use `docs/AI_HANDOFF.md` as the single task ledger.
-- Claude Code normally owns planning and independent review; local Codex normally owns
-  implementation, automated tests, and Android device verification.
+- Claude Code normally owns high-volume planning, auditing, repetitive work and independent review.
+  Codex normally owns visual/design implementation, rendering and interaction quality, deep
+  integration, automated gates, and Android device verification.
+- Assign by comparative advantage, not by alternating turns: give Claude work whose main cost is
+  context volume or repetition; give Codex work whose main risk is visible quality, subtle behavior,
+  data safety, performance, or architectural depth.
 - Before acting, read the handoff's active task, role, branch, base commit, allowed paths, and exit
   gate. Do not silently broaden them.
 - Only the named Writer may edit production source for the active task. The other assistant remains

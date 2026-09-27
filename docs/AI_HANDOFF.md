@@ -7,18 +7,18 @@ commit the update with the work it describes.
 
 | Field | Value |
 | --- | --- |
-| Status | `CHANGES_REQUESTED` |
+| Status | `READY_FOR_DEVICE_CHECK` |
 | Planner | Claude Code |
 | Writer | Codex |
 | Reviewer | Claude Code |
 | Specification | `docs/specs/PHASE-0D-brush-theme-bridge.md` |
 | Implementation branch | `fix/0D-brush-review` |
 | Base commit | `8683fac` |
-| Implementation commit | `d32acb28deae84a5eac3c32389de1f9b1d6350d2` |
+| Implementation commit | `6dd21b5d880ae9fd5544d048d3b36d0ef7786545` |
 | Allowed production scope | Brush library, brush preview, brush engine support, shared panel geometry |
 | Reviewed commit | `d32acb28deae84a5eac3c32389de1f9b1d6350d2` (branch head `4bc5c1b` is docs-only; production code identical). Earlier review: `3228527` |
 | Review report | `docs/reviews/REVIEW-2026-09-27-0D-d32acb2.md` (earlier: `docs/reviews/REVIEW-2026-09-27-0D-3228527.md`) |
-| Next action | Codex fixes N1 (restore the `dockSheet` drag lock, immersive mode and animation for the brush panel) and N4 (guard), commits, then sets `READY_FOR_DEVICE_CHECK` and runs the device script on `R5CTA0M9KRK` |
+| Next action | Codex completes the remaining visual/device gate on `R5CTA0M9KRK`: brush-panel screenshots, RTL/LTR and narrow-window geometry, then AC7 frame measurement. Claude is not needed unless a later independent heavy review is requested. |
 
 ## Required review checks
 
@@ -81,6 +81,26 @@ commit the update with the work it describes.
   Room-v4 branch. Confirm before installing.
 - Still open: R5 (owner decision on the icon family), R8 (`gradlew` not split out, recommended),
   and the 0A2 gate, which blocks `ACCEPTED`.
+
+## Narrow-fix and device evidence (Codex, 2026-09-27)
+
+- Commit: `6dd21b5d880ae9fd5544d048d3b36d0ef7786545`.
+- N1 resolved: `BrushPanel` again calls `PanelUi.dockSheet`, restoring the non-draggable sheet,
+  immersive flags and side-panel animation before applying the brush-specific placement.
+- N4 resolved: the repository collector now belongs to `viewLifecycleOwner`; preview updates also
+  return safely when the view-owned preview scope no longer exists.
+- Full verification command succeeded:
+  `gradlew.bat :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest -Partify.sidecar=true`.
+- Physical-device instrumentation succeeded on `R5CTA0M9KRK` (Samsung SM-S908E, Android 16):
+  `BrushPreviewDeterminismInstrumentedTest` finished **2 tests, 0 failures**.
+- Before installing, the sidecar database WAL reported Room schema version 3. The branch performs
+  the additive 3→4 migration. The production package `artify.com` was not installed over or modified.
+- Gradle's connected-test task removed the disposable `artify.com.codexqa` test installation after
+  the run, so Codex reinstalled the debug sidecar. Its prior sidecar-only local data may have been
+  reset; production data remains untouched.
+- Sidecar launch and Arabic landscape gallery were captured on the physical phone. A definitive
+  brush-panel screenshot was not accepted as evidence because the device returned to Gallery while
+  the capture was in progress. RTL/LTR geometry, narrow-window overlap and AC7 therefore remain open.
 
 ## Review result (2026-09-27, Claude Code, reviewed `3228527`)
 
