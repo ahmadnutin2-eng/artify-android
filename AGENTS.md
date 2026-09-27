@@ -11,7 +11,7 @@ Artify must retain its own name, assets, icons, brush names, and visual identity
 
 Every task prompt must name exactly one role.
 
-### Planner (Codex Cloud)
+### Planner (Claude Code by default)
 
 - Inspect the repository and the current roadmap before planning.
 - Produce or update a scoped specification under `docs/specs/`.
@@ -27,7 +27,7 @@ Every task prompt must name exactly one role.
   device when UI, drawing, stylus, performance, or lifecycle behavior changes.
 - Record evidence and remaining risks in the matching specification before handoff.
 
-### Reviewer (Codex Cloud or a separate local thread)
+### Reviewer (Claude Code or a separate independent thread)
 
 - Review the diff against the specification and acceptance criteria.
 - Prioritize data loss, rendering regressions, lifecycle bugs, security, accessibility, and
@@ -36,6 +36,20 @@ Every task prompt must name exactly one role.
 
 The same agent must not declare its own high-risk change accepted without automated evidence and a
 device check.
+
+## Claude Code ↔ Codex coordination
+
+- Both assistants use `docs/AI_HANDOFF.md` as the single task ledger.
+- Claude Code normally owns planning and independent review; local Codex normally owns
+  implementation, automated tests, and Android device verification.
+- Before acting, read the handoff's active task, role, branch, base commit, allowed paths, and exit
+  gate. Do not silently broaden them.
+- Only the named Writer may edit production source for the active task. The other assistant remains
+  read-only and may update only the approved specification or review report.
+- A handoff is valid only after the Writer commits the work and records the exact commit SHA. Never
+  hand off uncommitted files or rely on chat history as project state.
+- When both assistants run at the same time, use separate Git worktrees and branches. Never let two
+  agents write to the same working tree concurrently.
 
 ## Required gates
 
@@ -71,5 +85,5 @@ applications, or third-party proprietary assets. Never log collaboration tokens 
 - Master sequence: `docs/PRODUCT_ROADMAP.md`
 - Release gates and metrics: `docs/ACCEPTANCE_CRITERIA.md`
 - Planner/executor handoff: `docs/AGENT_WORKFLOW.md`
+- Live Claude/Codex ledger: `docs/AI_HANDOFF.md`
 - Phase specifications: `docs/specs/PHASE-<number>-<name>.md`
-
