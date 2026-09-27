@@ -87,18 +87,23 @@ class BrushPanel : BottomSheetDialogFragment() {
         val window = bottomDialog.window ?: return
         val topMarginDp = (screenHeightDp * 0.072f).toInt().coerceIn(36, 76)
         val bottomMarginDp = (screenHeightDp * 0.015f).toInt().coerceIn(6, 16)
-        val panelHeightDp = (screenHeightDp - topMarginDp - bottomMarginDp).coerceAtLeast(320)
-        val panelWidthPx = PanelUi.dp(requireContext(), paletteWidth)
-        val sideGutterDp = (screenWidthDp * 0.055f).toInt().coerceIn(64, 94)
-        val sideGutterPx = PanelUi.dp(requireContext(), sideGutterDp)
-        window.setLayout(panelWidthPx, PanelUi.dp(requireContext(), panelHeightDp))
+        val panelHeightDp = (screenHeightDp - topMarginDp - bottomMarginDp)
+            .coerceAtLeast(320)
+            .coerceAtMost((screenHeightDp - topMarginDp).coerceAtLeast(1))
+        // One geometry for width and position, measured on the same display dockSheet uses, so
+        // the panel can never be placed off screen or against an edge (review finding H2).
+        val display = resources.displayMetrics
+        val placement = com.procreate.android.ui.common.PanelGeometry.floatingPlacement(
+            requestedWidthDp = paletteWidth,
+            gutterDp = (screenWidthDp * 0.055f).toInt().coerceIn(64, 94),
+            displayWidthDp = (display.widthPixels / display.density).toInt(),
+            displayHeightDp = (display.heightPixels / display.density).toInt(),
+            dockRight = dockSide == PanelUi.DockSide.RIGHT
+        )
+        window.setLayout(PanelUi.dp(requireContext(), placement.widthDp), PanelUi.dp(requireContext(), panelHeightDp))
         window.setGravity(Gravity.LEFT or Gravity.TOP)
         window.attributes = window.attributes.apply {
-            x = if (dockSide == PanelUi.DockSide.RIGHT) {
-                resources.displayMetrics.widthPixels - panelWidthPx - sideGutterPx
-            } else {
-                sideGutterPx
-            }
+            x = PanelUi.dp(requireContext(), placement.xDp)
             y = PanelUi.dp(requireContext(), topMarginDp)
         }
         bottomDialog.findViewById<FrameLayout>(
@@ -448,9 +453,9 @@ class BrushPanel : BottomSheetDialogFragment() {
             intArrayOf(BrushSetIdentity.lighten(accent), accent, BrushSetIdentity.darken(accent))
         )
         coverWatermark?.text = BrushSetIdentity.glyphFor(set)
-        // The emoji many sets carry in their name is a label for the rail, not a headline; the
-        // cover sets the name large and does not need it shouting twice.
-        coverTitle?.text = set.name.trim()
+        // The same emoji-free name the rail shows (review L1): the cover sets it large, and a
+        // pictogram there ignores the tint and changes look from device to device.
+        coverTitle?.text = BrushSetIdentity.displayName(set)
         coverTagline?.apply {
             text = set.tagline ?: getString(R.string.brush_set_count, set.brushes.size)
             visibility = View.VISIBLE
@@ -528,8 +533,10 @@ class BrushSetAdapter(
         val context = parent.context
         fun dp(v: Int) = PanelUi.dp(context, v)
         val screenHeightDp = context.resources.configuration.screenHeightDp
+        // Never under the 48dp touch target (review M4), even in the compact phone rail, where the
+        // rows used to be 34-42dp; a longer rail scrolls, a small target is missed.
         val rowHeightDp = if (compact) {
-            (screenHeightDp * 0.070f).toInt().coerceIn(34, 42)
+            48
         } else {
             (screenHeightDp * 0.055f).toInt().coerceIn(48, 58)
         }
@@ -581,16 +588,13 @@ class BrushSetAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val context = holder.row.context
         val set = sets[position]
-        holder.textView.text = set.name
-            .replace(Regex("[\\p{So}\\p{Sk}\\uFE0F\\u200D]"), "")
-            .replace(Regex("\\s+"), " ")
-            .trim()
+        holder.textView.text = BrushSetIdentity.displayName(set)
         val selected = position == selectedIndex
         holder.row.background = ContextCompat.getDrawable(
             context, if (selected) R.drawable.bg_brush_category_selected else R.drawable.bg_brush_row
         )
         holder.tagView.setBackgroundColor(BrushSetIdentity.accentFor(set))
-        holder.iconView.setImageResource(categoryIcon(set.id))
+        holder.iconView.setImageResource(BrushSetIdentity.iconFor(set))
         holder.iconView.imageTintList = android.content.res.ColorStateList.valueOf(
             ContextCompat.getColor(context, if (selected) R.color.white else R.color.icon_dim)
         )
@@ -601,15 +605,6 @@ class BrushSetAdapter(
     }
 
     override fun getItemCount() = sets.size
-
-    private fun categoryIcon(id: String): Int = when {
-        id == "my_brushes" -> R.drawable.ic_plus
-        id.contains("water") -> R.drawable.ic_blur
-        id.contains("air") || id.contains("spray") -> R.drawable.ic_smudge
-        id.contains("texture") || id.contains("charcoal") || id.contains("earth") -> R.drawable.ic_image
-        id.contains("luminance") -> R.drawable.ic_colors
-        else -> R.drawable.ic_brush
-    }
 }
 
 class BrushAdapter(
@@ -730,15 +725,31 @@ class BrushAdapter(
         val width = image.width
         val height = image.height
         if (width > 0 && height > 0) {
-            image.setImageBitmap(BrushPreviewRenderer.getPreview(brush, width, height))
+            showPreview(image, brush, width, height)
             return
         }
         image.post {
             if (image.tag != brush.id) return@post
             val w = image.width
             val h = image.height
-            if (w > 0 && h > 0) image.setImageBitmap(BrushPreviewRenderer.getPreview(brush, w, h))
+            if (w > 0 && h > 0) showPreview(image, brush, w, h)
         }
+    }
+
+    /**
+     * A cached swatch is shown at once. Otherwise the row stays empty for the few milliseconds the
+     * preview thread needs, rather than the UI thread rendering it mid-fling.
+     */
+    private fun showPreview(image: ImageView, brush: Brush, width: Int, height: Int) {
+        BrushPreviewRenderer.cachedPreview(brush, width, height)?.let {
+            image.setImageBitmap(it)
+            return
+        }
+        image.setImageDrawable(null)
+        BrushPreviewRenderer.renderPreviewAsync(
+            brush, width, height,
+            stillWanted = { image.tag == brush.id }
+        ) { bitmap -> if (image.tag == brush.id) image.setImageBitmap(bitmap) }
     }
 
     override fun getItemCount() = brushes.size

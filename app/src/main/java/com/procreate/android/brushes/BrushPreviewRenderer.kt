@@ -35,15 +35,54 @@ object BrushPreviewRenderer {
             size > 128
     }
 
-    fun getPreview(brush: Brush, widthPx: Int, heightPx: Int): Bitmap {
-        val key = "${brush.id}_${brush.properties.hashCode()}_stroke_${widthPx}x$heightPx"
-        return strokeCache.getOrPut(key) { renderStrokePreview(brush, widthPx, heightPx) }
+    /**
+     * Both caches are read on the UI thread and filled from the preview thread, and an
+     * access-ordered map changes even on a read, so every access holds the map's lock. Rendering
+     * happens outside it; if two callers race on one key, the first stored bitmap wins.
+     */
+    private inline fun cached(cache: LinkedHashMap<String, Bitmap>, key: String, render: () -> Bitmap): Bitmap {
+        synchronized(cache) { cache[key] }?.let { return it }
+        val rendered = render()
+        return synchronized(cache) { cache.getOrPut(key) { rendered } }
     }
 
-    fun getTipIcon(brush: Brush, sizePx: Int): Bitmap {
-        val key = "${brush.id}_${brush.properties.hashCode()}_icon_$sizePx"
-        return iconCache.getOrPut(key) { renderTipIcon(brush, sizePx) }
+    private fun previewKey(brush: Brush, widthPx: Int, heightPx: Int) =
+        "${brush.id}_${brush.properties.hashCode()}_stroke_${widthPx}x$heightPx"
+
+    fun getPreview(brush: Brush, widthPx: Int, heightPx: Int): Bitmap =
+        cached(strokeCache, previewKey(brush, widthPx, heightPx)) { renderStrokePreview(brush, widthPx, heightPx) }
+
+    /** A swatch that is already rendered, or null. Never renders, so it is safe while binding rows. */
+    fun cachedPreview(brush: Brush, widthPx: Int, heightPx: Int): Bitmap? =
+        synchronized(strokeCache) { strokeCache[previewKey(brush, widthPx, heightPx)] }
+
+    /**
+     * One background thread renders swatches in request order, so a cold panel or a fling never
+     * runs ~90 textured stamps per row on the UI thread. [stillWanted] is checked just before the
+     * work starts, which skips rows that were recycled while waiting; [onReady] runs on the main
+     * thread.
+     */
+    private val previewExecutor = java.util.concurrent.Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "brush-previews").apply { isDaemon = true }
     }
+    private val mainHandler by lazy { android.os.Handler(android.os.Looper.getMainLooper()) }
+
+    fun renderPreviewAsync(
+        brush: Brush,
+        widthPx: Int,
+        heightPx: Int,
+        stillWanted: () -> Boolean,
+        onReady: (Bitmap) -> Unit
+    ) {
+        previewExecutor.execute {
+            if (!stillWanted()) return@execute
+            val bitmap = runCatching { getPreview(brush, widthPx, heightPx) }.getOrNull() ?: return@execute
+            mainHandler.post { onReady(bitmap) }
+        }
+    }
+
+    fun getTipIcon(brush: Brush, sizePx: Int): Bitmap =
+        cached(iconCache, "${brush.id}_${brush.properties.hashCode()}_icon_$sizePx") { renderTipIcon(brush, sizePx) }
 
     /**
      * A few of a set's own strokes stacked into one strip, for the set's cover card.
@@ -56,11 +95,11 @@ object BrushPreviewRenderer {
     fun getSetMontage(set: BrushSet, widthPx: Int, heightPx: Int): Bitmap {
         val sample = pickRepresentative(set)
         val key = "set_${set.id}_${sample.joinToString("|") { it.id }}_${widthPx}x$heightPx"
-        return strokeCache.getOrPut(key) {
+        return cached(strokeCache, key) {
             val w = widthPx.coerceAtLeast(10)
             val h = heightPx.coerceAtLeast(10)
             val montage = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-            if (sample.isEmpty()) return@getOrPut montage
+            if (sample.isEmpty()) return@cached montage
             val canvas = Canvas(montage)
             val bandHeight = h / sample.size
             sample.forEachIndexed { index, brush ->
@@ -89,10 +128,14 @@ object BrushPreviewRenderer {
     }
 
     fun clearCache() {
-        strokeCache.values.forEach { it.recycle() }
-        strokeCache.clear()
-        iconCache.values.forEach { it.recycle() }
-        iconCache.clear()
+        synchronized(strokeCache) {
+            strokeCache.values.forEach { it.recycle() }
+            strokeCache.clear()
+        }
+        synchronized(iconCache) {
+            iconCache.values.forEach { it.recycle() }
+            iconCache.clear()
+        }
     }
 
     private fun renderStrokePreview(
@@ -128,7 +171,8 @@ object BrushPreviewRenderer {
             else -> h * 0.28f
         }.coerceIn(6f, h * 0.42f)
 
-        val engine = BrushEngine()
+        // Seeded by the brush, so a swatch never changes between renders of the same brush.
+        val engine = BrushEngine(seed = BrushSetIdentity.previewSeed(brush))
         engine.properties = brush.properties.copy(
             size = previewSize,
             smoothing = 0f,

@@ -110,7 +110,14 @@ data class BrushProperties(
  *    [renderScale], not canvas pixels. A fixed canvas-space floor is what made stamps visibly
  *    separate once the user zoomed in - the gap was magnified along with everything else.
  */
-class BrushEngine {
+class BrushEngine(
+    /**
+     * Seeds jitter and scatter. The canvas wants fresh randomness per engine; previews pass a
+     * fixed seed per brush so the same brush always draws the same swatch (and can be
+     * golden-tested).
+     */
+    seed: Long = System.nanoTime()
+) {
     /** Called immediately before pixels in this canvas-space rectangle are mutated. */
     var beforeWrite: ((RectF) -> Unit)? = null
     var properties = BrushProperties()
@@ -130,7 +137,7 @@ class BrushEngine {
     private val stampPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val stampMatrix = Matrix()
     private val grainLocalMatrix = Matrix()
-    private val rng = Random(System.nanoTime())
+    private val rng = Random(seed)
 
     private var distanceAccumulator: Float = 0f
     private var currentTipBitmap: Bitmap? = null

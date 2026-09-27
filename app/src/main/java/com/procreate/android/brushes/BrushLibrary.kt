@@ -82,6 +82,72 @@ object BrushSetIdentity {
         return meaningful.first().toString()
     }
 
+    private val PICTOGRAMS = Regex("[\\p{So}\\p{Sk}\\uFE0F\\u200D]")
+
+    /**
+     * The set's name as every surface shows it: without the emoji and symbol prefixes the names
+     * carry. The rail stripped them and the cover did not, so the two disagreed (review L1), and
+     * emoji ignore the app's tint and change look from device to device.
+     */
+    fun displayName(set: BrushSet): String = displayName(set.name)
+
+    fun displayName(name: String): String =
+        name.replace(PICTOGRAMS, "").replace(Regex("\\s+"), " ").trim().ifEmpty { name.trim() }
+
+    /**
+     * The rail icon for each set, chosen per set rather than guessed from fragments of its id
+     * (review L2: "air" matched "airbrushing" but also any future id containing it). A set not
+     * listed here - an imported pack - gets the plain brush.
+     */
+    private val ICONS: Map<String, Int> = mapOf(
+        "my_brushes" to com.procreate.android.R.drawable.ic_plus,
+        "artify_originals" to com.procreate.android.R.drawable.ic_brush,
+        "color_flow" to com.procreate.android.R.drawable.ic_palette,
+        "square_kufic" to com.procreate.android.R.drawable.ic_urban_grid,
+        "arabic_calligraphy" to com.procreate.android.R.drawable.ic_brush,
+        "featured_signature" to com.procreate.android.R.drawable.ic_library,
+        "sketching" to com.procreate.android.R.drawable.ic_brush,
+        "inking" to com.procreate.android.R.drawable.ic_brush,
+        "drawing" to com.procreate.android.R.drawable.ic_brush,
+        "painting" to com.procreate.android.R.drawable.ic_palette,
+        "artistic" to com.procreate.android.R.drawable.ic_filters,
+        "calligraphy" to com.procreate.android.R.drawable.ic_brush,
+        "airbrushing" to com.procreate.android.R.drawable.ic_smudge,
+        "textures" to com.procreate.android.R.drawable.ic_image,
+        "abstract" to com.procreate.android.R.drawable.ic_filters,
+        "charcoals" to com.procreate.android.R.drawable.ic_image,
+        "elements" to com.procreate.android.R.drawable.ic_blur,
+        "spraypaints" to com.procreate.android.R.drawable.ic_smudge,
+        "touchups" to com.procreate.android.R.drawable.ic_adjustments,
+        "retro" to com.procreate.android.R.drawable.ic_image,
+        "luminance" to com.procreate.android.R.drawable.ic_colors,
+        "industrial" to com.procreate.android.R.drawable.ic_urban_grid,
+        "organic" to com.procreate.android.R.drawable.ic_image,
+        "water" to com.procreate.android.R.drawable.ic_blur,
+        "earth" to com.procreate.android.R.drawable.ic_image,
+        "special_brushes" to com.procreate.android.R.drawable.ic_library
+    )
+
+    fun iconFor(set: BrushSet): Int = ICONS[set.id] ?: com.procreate.android.R.drawable.ic_brush
+
+    /** For tests: whether [iconFor] has a deliberate choice for this set. */
+    internal fun hasExplicitIcon(set: BrushSet): Boolean = set.id in ICONS
+
+    /**
+     * Stable seed for a brush preview. Kotlin's String hash is deterministic, but widening a single
+     * 32-bit hash to Long makes collisions needlessly likely in a large imported library. FNV-1a
+     * keeps the renderer deterministic while mixing the brush identity into the full seed width.
+     */
+    fun previewSeed(brush: Brush): Long {
+        var hash = -0x340d631b7bdddcdbL // 64-bit FNV offset basis as a signed Long.
+        val identity = "${brush.id}\u0000${brush.category}\u0000${brush.name}"
+        identity.forEach { char ->
+            hash = hash xor char.code.toLong()
+            hash *= 0x100000001b3L
+        }
+        return hash
+    }
+
     fun lighten(color: Int): Int = blend(color, 0xFFFFFFFF.toInt(), 0.22f)
 
     fun darken(color: Int): Int = blend(color, 0xFF000000.toInt(), 0.24f)

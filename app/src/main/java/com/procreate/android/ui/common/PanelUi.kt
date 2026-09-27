@@ -490,18 +490,9 @@ object PanelUi {
         val display = sheet.resources.displayMetrics
         val displayWidthDp = (display.widthPixels / display.density).toInt()
         val displayHeightDp = (display.heightPixels / display.density).toInt()
-        // On a phone in landscape, a fixed 390dp palette can cover almost the entire canvas.
-        // Keep a useful strip of artwork visible while retaining enough width for labels/sliders.
-        val phoneWidthCap = if (displayHeightDp < 520) {
-            (displayWidthDp * 0.52f).toInt().coerceAtLeast(320)
-        } else {
-            widthDp
-        }
-        val safeWidthDp = minOf(
-            widthDp,
-            phoneWidthCap,
-            displayWidthDp.minus(24).coerceAtLeast(280)
-        )
+        // On a phone in landscape, a fixed 390dp palette can cover almost the entire canvas, so
+        // the width keeps a useful strip of artwork visible and both screen edges clear.
+        val safeWidthDp = PanelGeometry.safeWidthDp(widthDp, displayWidthDp, displayHeightDp)
         window.setLayout(dp(sheet.context, safeWidthDp), ViewGroup.LayoutParams.MATCH_PARENT)
         window.setGravity(
             (if (side == DockSide.LEFT) Gravity.LEFT else Gravity.RIGHT) or Gravity.TOP

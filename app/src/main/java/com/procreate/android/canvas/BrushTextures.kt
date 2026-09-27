@@ -56,6 +56,18 @@ object BrushTextures {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Bitmap>?): Boolean = size > 48
     }
 
+    /**
+     * The cache is shared by the canvas (UI thread) and brush previews (a background thread), and an
+     * access-ordered map is mutated even by a read, so every access holds its lock. The texture is
+     * built outside the lock so a slow decode never stalls the other thread; if two threads race to
+     * build the same key, the first one stored wins and both return it.
+     */
+    private inline fun cached(key: String, create: () -> Bitmap): Bitmap {
+        synchronized(textureCache) { textureCache[key] }?.let { return it }
+        val created = create()
+        return synchronized(textureCache) { textureCache.getOrPut(key) { created } }
+    }
+
     /** The bitmap resolution used to render a brush of [size] canvas pixels. */
     fun tipResolutionFor(size: Int): Int {
         var res = MIN_TIP_PX
@@ -73,7 +85,7 @@ object BrushTextures {
     fun getBrushTip(type: BrushTipType, size: Int, customPath: String? = null): Bitmap {
         val res = tipResolutionFor(size)
         val key = if (type == BrushTipType.CUSTOM) "custom_${customPath}_$res" else "${type.name}_tip_$res"
-        return textureCache.getOrPut(key) {
+        return cached(key) {
             // Tips are almost always drawn smaller than they're generated, so mip levels are what
             // keep a noisy tip (pencil grain, spray dots, bristles) from aliasing into shimmer as
             // the brush size changes - plain bilinear minification would just drop pixels.
@@ -86,7 +98,7 @@ object BrushTextures {
      */
     fun getGrainTexture(type: GrainType): Bitmap {
         val key = "${type.name}_grain"
-        return textureCache.getOrPut(key) { createGrainTexture(type, GRAIN_TILE_PX) }
+        return cached(key) { createGrainTexture(type, GRAIN_TILE_PX) }
     }
 
     /**
@@ -96,7 +108,7 @@ object BrushTextures {
     fun getGrainTextureCustom(path: String?): Bitmap {
         if (path.isNullOrEmpty() || path.endsWith(BLANK_ASSET)) return getGrainTexture(GrainType.NONE)
         val key = "grain_custom_$path"
-        return textureCache.getOrPut(key) {
+        return cached(key) {
             val source = try {
                 when {
                     path.startsWith("asset://") -> {
@@ -107,7 +119,7 @@ object BrushTextures {
                 }
             } catch (e: Exception) {
                 null
-            } ?: return@getOrPut createPaperGrain(GRAIN_TILE_PX)
+            } ?: return@cached createPaperGrain(GRAIN_TILE_PX)
 
             val scaled = if (source.width == GRAIN_TILE_PX && source.height == GRAIN_TILE_PX) source
             else Bitmap.createScaledBitmap(source, GRAIN_TILE_PX, GRAIN_TILE_PX, true)
@@ -152,7 +164,7 @@ object BrushTextures {
     fun getThumbnail(path: String?): Bitmap? {
         if (path.isNullOrEmpty()) return null
         val key = "thumb_clean_$path"
-        return textureCache.getOrPut(key) {
+        return cached(key) {
             val source = try {
                 when {
                     path.startsWith("asset://") -> {
@@ -866,7 +878,7 @@ object BrushTextures {
     /** Drop every cached texture. Entries are released to the GC rather than recycled, since a
      * stroke may still be stamping one of them on another thread/frame. */
     fun clearCache() {
-        textureCache.clear()
+        synchronized(textureCache) { textureCache.clear() }
     }
 }
 
