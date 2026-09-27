@@ -7,7 +7,7 @@ commit the update with the work it describes.
 
 | Field | Value |
 | --- | --- |
-| Status | `READY_FOR_CLAUDE_REVIEW` |
+| Status | `CHANGES_REQUESTED` |
 | Planner | Claude Code |
 | Writer | Codex |
 | Reviewer | Claude Code |
@@ -16,9 +16,9 @@ commit the update with the work it describes.
 | Base commit | `8683fac` |
 | Implementation commit | `d32acb28deae84a5eac3c32389de1f9b1d6350d2` |
 | Allowed production scope | Brush library, brush preview, brush engine support, shared panel geometry |
-| Reviewed commit | `3228527206299797244b222a8e76e40ecb5b2f2b` (branch head `a4ac866` is docs-only; production code identical) |
-| Review report | `docs/reviews/REVIEW-2026-09-27-0D-3228527.md` |
-| Next action | Claude independently re-reviews `d32acb2`, focusing on R1, R2, R4, R6 and R7; do not edit production source |
+| Reviewed commit | `d32acb28deae84a5eac3c32389de1f9b1d6350d2` (branch head `4bc5c1b` is docs-only; production code identical). Earlier review: `3228527` |
+| Review report | `docs/reviews/REVIEW-2026-09-27-0D-d32acb2.md` (earlier: `docs/reviews/REVIEW-2026-09-27-0D-3228527.md`) |
+| Next action | Codex fixes N1 (restore the `dockSheet` drag lock, immersive mode and animation for the brush panel) and N4 (guard), commits, then sets `READY_FOR_DEVICE_CHECK` and runs the device script on `R5CTA0M9KRK` |
 
 ## Required review checks
 
@@ -50,6 +50,37 @@ commit the update with the work it describes.
 - Verification: 316 JVM tests passed; debug APK and Android-test APK assembled.
 - Device/instrumented execution is still pending because ADB reported no connected devices. Do not
   downgrade the existing Room-v5 sidecar with this Room-v4 branch.
+
+## Re-review result (2026-09-27, Claude Code, independent, reviewed `d32acb2`)
+
+- Verdict: **`CHANGES_REQUESTED` (narrow)**.
+  - **Resolved:** R4, R6 and R7.
+  - **R2:** resolved in code. The preview scope is bound to the view, jobs are cancelled per row,
+    per recycle and on adapter detach, a placeholder shows with a 100ms fade, and OOM is logged
+    with the cache trimmed.
+  - **R1:** resolved on paper. At least 40% of the canvas stays visible, there is a 64dp gutter and
+    a preview column of at least 72dp, and window-based Configuration dimensions are used.
+  - **R9:** closed.
+- Reviewer gate: `--rerun` at `4bc5c1b` gave **316 JVM tests, 0 failures**. The debug app and test
+  APKs assemble.
+- **N1 (S3, required):** `BrushPanel` replaced `PanelUi.dockSheet` with `expandSheet`
+  (`BrushPanel.kt:94`). That dropped `isDraggable = false` (`PanelUi.kt:519`), which means dragging
+  or over-scrolling can now dismiss the panel. It also dropped immersive mode (`:502`) and the
+  side-panel animation (`:503-507`). The six other docked panels still have all of these.
+- **N4 (S4, recommended):** `checkNotNull(previewScope)` (`BrushPanel.kt:492`) can be reached from
+  the fragment-scoped `repository.all` collector (`:348-366`) after `onDestroyView`. Collect on
+  `viewLifecycleOwner` or guard against a null scope.
+- **Device check items:**
+  - **N2:** the 64dp constant is not the real rail footprint (84dp on the tablet XML, 50dp on a
+    compact phone), so check for overlap in Arabic.
+  - **N3:** check that a 152dp palette at a 360dp split-screen width is still usable.
+  - **N5:** measure AC7 with parallel previews.
+  - **R3:** run the instrumented test and capture the screenshots, both still missing.
+- Connected device (read-only): `R5CTA0M9KRK`, Galaxy S22 Ultra, Android 16, about 823 × 384 dp in
+  landscape. Its sidecar was installed on 2026-09-24, before Room v5, so it is likely safe for this
+  Room-v4 branch. Confirm before installing.
+- Still open: R5 (owner decision on the icon family), R8 (`gradlew` not split out, recommended),
+  and the 0A2 gate, which blocks `ACCEPTED`.
 
 ## Review result (2026-09-27, Claude Code, reviewed `3228527`)
 
